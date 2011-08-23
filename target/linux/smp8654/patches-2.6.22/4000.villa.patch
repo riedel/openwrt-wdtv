@@ -1,0 +1,1195 @@
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//drivers/char/irkernel.c linux-2.6.22.19//drivers/char/irkernel.c
+--- linux-2.6.22.19.ref//drivers/char/irkernel.c	2009-09-24 09:11:26.000000000 +0200
++++ linux-2.6.22.19//drivers/char/irkernel.c	2011-04-27 12:31:17.000000000 +0200
+@@ -1,3 +1,8 @@
++#define	CONFIG_IR_REPORT_RELEASE_KEY
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++#define	CONFIG_IR_ALT_KEY
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
++
+ 
+ /*********************************************************************
+  Copyright (C) 2001-2007
+@@ -25,6 +30,9 @@
+ #include <asm/tango3/ir.h>
+ #endif
+ 
++#define	IR_IOCSETRELEASEKEY	_IO(IR_IOC_MAGIC, 6)
++#define IR_IOCSETALTKEYS	_IO(IR_IOC_MAGIC, 7)
++
+ /* For all SMP86xx, it's always there */
+ #if defined(CONFIG_TANGO2_SMP863X) || defined(CONFIG_TANGO3_SMP86XX)
+ #define WITH_RC5_CONTROL
+@@ -72,11 +80,11 @@
+ 
+ #ifdef CONFIG_IR_HOLD_KEY
+ /* to identify the key is repeat or hold key. (seconds) */
+-#define HOLD_KEY_PERIOD		3 * HZ
++#define HOLD_KEY_PERIOD		1 * HZ
+ #endif //CONFIG_IR_HOLD_KEY
+ 
+ /* Max. size of key table */
+-#define MAX_KEYS		32
++#define MAX_KEYS		128
+ 
+ /* The major device number and name */
+ #define IR_DEV_MAJOR		0
+@@ -96,7 +104,9 @@
+ #endif /* WITH_RC5_CONTROL */
+ 
+ static int wp_var; /* Variable wait period */
+-static int wait_period = ((((WAIT_PERIOD * HZ) / 1000) == 0) ? 1 : ((WAIT_PERIOD * HZ) / 1000));
++static int wait_jiffies = ((((WAIT_PERIOD * HZ) / 1000) == 0) ? 1 : ((WAIT_PERIOD * HZ) / 1000));
++
++static int wait_period = WAIT_PERIOD;
+ module_param(wait_period, int, 0);
+ 
+ static int buffer_size = BUF_SIZE;
+@@ -121,6 +131,10 @@
+ #ifdef CONFIG_IR_HOLD_KEY 
+ 	unsigned long *hold_key_table;	/* Table for hold keys */
+ #endif //CONFIG_IR_HOLD_KEY
++#ifdef	CONFIG_IR_ALT_KEY
++	unsigned long *alt_key_table;
++	int	alt_key;
++#endif	// CONFIG_IR_ALT_KEY
+ 	unsigned p_idx;			/* Index of producer */
+ 	unsigned c_idx; 		/* Index of consumer */
+ 	unsigned ref_cnt;		/* Reference count */
+@@ -128,6 +142,11 @@
+ 	unsigned char b_mode;		/* Blocking mode or not */
+ 	unsigned long last_jiffies;	/* Timestamp for last reception */
+ 	unsigned int num_keys;		/* Number of keys in the table */
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++	struct	timer_list	release_timer;
++	unsigned int released_key_code;
++	int	released_key_sent;
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
+ };
+ 
+ /* Some prototypes */
+@@ -151,6 +170,22 @@
+ 	owner: THIS_MODULE,
+ };
+ 
++#ifdef	CONFIG_IR_ALT_KEY
++static unsigned long ir_get_alt_key(struct ir_private *priv, unsigned long key)
++{
++	register unsigned int i;
++	unsigned long *ptr = priv->key_table;
++	unsigned long *ptr_alt = priv->alt_key_table;
++
++	for (i = 0; i < priv->num_keys; i++, ptr++, ptr_alt++){
++		if (key == *ptr && ptr_alt){
++			return(*ptr_alt);
++		}
++	}
++	return(0);
++}
++#endif	// CONFIG_IR_ALT_KEY
++
+ #ifdef CONFIG_IR_HOLD_KEY
+ /* Check to see if we can find the key in the hold key table */
+ static unsigned long ir_get_hold_key(struct ir_private *priv, unsigned long key)
+@@ -218,7 +253,7 @@
+ 			printk(KERN_DEBUG "Not acceptable RC6 code 0x%08lx\n", dx[0]);
+ #endif
+ 			goto out;	/* Not valid */
+-		} else if (time_after(priv->last_jiffies + wait_period, jiffies) && 
++		} else if (time_after(priv->last_jiffies + wait_jiffies, jiffies) && 
+ 			(memcmp(&save_rc6_key, &dx, sizeof(unsigned long) * RC6_DWORDS) == 0)) {
+ 			/* Throw away this key if this is the same key and came too
+ 		   	   fast */
+@@ -311,7 +346,7 @@
+ 			printk(KERN_DEBUG "%s: repetition too fast\n", ir_devname);
+ #endif
+ 			goto out; 	/* Key repeats too fast, drop it */
+-		} else if (time_before(priv->last_jiffies + (wait_period * 4), jiffies)) {
++		} else if (time_before(priv->last_jiffies + (wait_jiffies * 4), jiffies)) {
+ #ifdef DEBUG_IR
+ 			printk(KERN_DEBUG "%s: got slow repetition, glitch?\n", ir_devname);
+ #endif
+@@ -329,7 +364,7 @@
+ #endif
+ 		data = save_key; /* Valid repeated key */
+ 		repeat_key = 1;
+-	} else if (time_after(priv->last_jiffies + wait_period, jiffies) && 
++	} else if (time_after(priv->last_jiffies + wait_jiffies, jiffies) && 
+ 			(data == old_key)) {
+ 		/* Throw away this key if this is the same key and came too
+ 		   fast */
+@@ -341,7 +376,7 @@
+ 	} 
+ 
+ 	/* Shrink the wait time for repeat key if current one is repeated */
+-	wp_var = (repeat_key ? (wait_period / 2) : wait_period); 
++	wp_var = (repeat_key ? (wait_jiffies / 2) : wait_jiffies); 
+ 	priv->last_jiffies = jiffies;
+ 	save_key = old_key = data;
+ 
+@@ -363,12 +398,17 @@
+ 				first_hold_key_jiffies = jiffies;
+ 				last_hold_key_jiffies = jiffies;
+ 			}else if (time_after(jiffies, first_hold_key_jiffies + HOLD_KEY_PERIOD)){
++#if 0
+ 				if (time_after(jiffies, last_hold_key_jiffies + (HZ/5) )){
+ 					last_hold_key_jiffies = jiffies;
+ 					data = hold_key;
+ 				}else{
+ 					data = 0;
+ 				}
++#else
++				last_hold_key_jiffies = jiffies;
++				data = hold_key;
++#endif
+ 			}
+ 		}else
+ 			first_hold_key_jiffies = 0;
+@@ -388,6 +428,44 @@
+ 		printk(KERN_WARNING "%s: buffer full\n", ir_devname);
+ 	}
+ 
++#ifdef	CONFIG_IR_ALT_KEY
++	/*
++	 * There are three tables:
++	 *
++	 * 	key_table:
++	 *
++	 * 		Keys can be repeated are assigned here.
++	 *
++	 * 	hold_key_table:
++	 *
++	 *		This is used according to key_table.
++	 *		Keys not only can be repelated but they changes to 'hold' key if user presses long enough.
++	 *
++	 * 	alt_key_table: (Added by William) 
++	 *
++	 * 		It just likes card radio. If you press and hold it for a certain time, it sends out another key (alt key),
++	 * 		and this key shouldn't be repeated.
++	 */
++	int alt_key = ir_get_alt_key(priv, save_key);  
++	//printk(KERN_DEBUG "%s:%d data: %d, save_key: %d, alt_key: %d\n", __FUNCTION__, __LINE__, data, save_key, alt_key );
++	if (alt_key) {	
++		/*
++		 * This key shouldn't be repeated and should be sent by release timer. 
++		 */
++		priv->alt_key = data;
++		if (data != save_key) {
++			/*
++			 * It becomes hold key. Just send it.
++			 */ 
++		} else {
++			//printk(KERN_DEBUG "%s:%d Drop it\n", __FUNCTION__, __LINE__ );
++			priv->released_key_sent = 0;
++			goto out;
++		}
++	} else
++		priv->alt_key = 0;
++#endif	// CONFIG_IR_ALT_KEY
++
+ 	priv->buffer[priv->p_idx] = data;
+ 	priv->p_idx = (priv->p_idx + 1) % buffer_size;
+ 
+@@ -395,7 +473,15 @@
+ 	if ((priv->b_mode != 0) && (priv->c_idx == pidx)) 
+ 		wake_up_interruptible(&ir_wq);
+ 
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++	priv->released_key_sent = 0;
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
++
+ out:
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++	if (priv->released_key_code && !priv->released_key_sent)
++		mod_timer( &priv->release_timer, jiffies + 15 );
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
+ 	spin_unlock(&priv->lock);
+ }
+ 
+@@ -509,6 +595,8 @@
+ 	return(count);
+ }
+ 
++
++
+ /* ioctl function */
+ static int ir_ioctl(struct inode *inode, struct file *fptr, unsigned int cmd, unsigned long arg)
+ {
+@@ -523,22 +611,41 @@
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 
+ 	switch(cmd) {
+-		case IR_IOCSETREPEATKEYS: /* Set the repetition keys */
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++		case IR_IOCSETRELEASEKEY:
++			priv->released_key_code = arg; 
++			//printk( KERN_ERR "Repeat key code: %x\n", priv->released_key_code );
++			break;
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
++#ifdef	CONFIG_IR_ALT_KEY
++		case IR_IOCSETALTKEYS:
+ 			if (copy_from_user(&key_no, ptr, sizeof(unsigned long))) {
+ 				spin_unlock_irqrestore(&priv->lock, flags);
+ 				return(-EFAULT);
+ 			} else if ((key_no <= 0) || (key_no > max_keys)) {
+ 				spin_unlock_irqrestore(&priv->lock, flags);
+ 				return(-EIO);
+-			} else
+-				priv->num_keys = key_no;
+-			copy_from_user(priv->key_table, ptr + 1, sizeof(unsigned long) * key_no);
++			} 
++			copy_from_user(priv->alt_key_table, ptr + 1, sizeof(unsigned long) * key_no);
++			break;
++#endif	// CONFIG_IR_ALT_KEY
++		case IR_IOCSETREPEATKEYS: /* Set the repetition keys */
++			if (copy_from_user(&key_no, ptr, sizeof(unsigned long))) 
++				goto efault_out;
++			else if ((key_no <= 0) || (key_no > max_keys)) 
++				goto eio_out;
++			else if (copy_from_user(priv->key_table, ptr + 1, sizeof(unsigned long) * key_no)) 
++				goto efault_out;
++			priv->num_keys = key_no;
+ 			break;
+ 		case IR_IOCGETREPEATKEYS: /* Get the repetition keys */
+ 			key_no = priv->num_keys;
+-			copy_to_user(ptr, &key_no, sizeof(unsigned long));
+-			if (key_no > 0)
+-				copy_to_user(ptr + 1, priv->key_table, sizeof(unsigned long) * key_no);
++			if (copy_to_user(ptr, &key_no, sizeof(unsigned long))) 
++				goto efault_out;
++			else if (key_no > 0) {
++				if (copy_to_user(ptr + 1, priv->key_table, sizeof(unsigned long) * key_no)) 
++					goto efault_out;
++			}
+ 			break;
+ #ifdef CONFIG_IR_HOLD_KEY
+ 		case IR_IOCSETHOLDKEYS: /* Set the hold keys */
+@@ -559,20 +666,28 @@
+ 			break;
+ #endif //CONFIG_IR_HOLD_KEY
+ 		case IR_IOCSETWAITPERIOD:
+-			wait_period = wp_var = ((((arg * HZ) / 1000) == 0) ? 1 : ((arg * HZ) / 1000));
++			wait_period = arg;
++			wait_jiffies = wp_var = ((((wait_period * HZ) / 1000) == 0) ? 1 : ((wait_period * HZ) / 1000));
+ 			break;
+-		case IR_IOCGETWAITPERIOD: {
+-				int wp = (wait_period * 1000) / HZ;
+-				copy_to_user(ptr, &wp, sizeof(int));
+-			}
++		case IR_IOCGETWAITPERIOD: 
++			if (copy_to_user(ptr, &wait_period, sizeof(int))) 
++				goto efault_out;
+ 			break;
+ 		default:
+-			spin_unlock_irqrestore(&priv->lock, flags);
+-                        return(-EIO);
++			goto eio_out;
++			break;
+ 	}
+ 
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 	return(0);
++
++eio_out:
++	spin_unlock_irqrestore(&priv->lock, flags);
++	return(-EIO);
++
++efault_out:
++	spin_unlock_irqrestore(&priv->lock, flags);
++	return(-EFAULT);
+ }
+ 
+ /* Poll function */
+@@ -627,7 +742,7 @@
+ 	gbus_write_reg32(IR_NEC_CAPTURE_DATA, 0);
+ 	gbus_write_reg32(IR_NEC_CTRL, 0x1f0c3b10);
+ 
+-	wp_var = wait_period;
++	wp_var = wait_jiffies;
+ 
+ 	printk(KERN_DEBUG "%s: Enable NEC decoder (0x%08x)\n", 
+ 			ir_devname, (u32)gbus_read_reg32(IR_NEC_CAPTURE_DATA));
+@@ -696,6 +811,30 @@
+ 	return(0);
+ }
+ 
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++static	void	send_release_key_func( unsigned long arg )
++{
++	spin_lock(ir_priv.lock);
++	//printk( KERN_ERR "released\n" );
++	
++	if (((ir_priv.p_idx + 1) % buffer_size) == ir_priv.c_idx) {
++		ir_priv.c_idx = (ir_priv.c_idx + 1) % buffer_size;
++	}
++#ifdef	CONFIG_IR_ALT_KEY
++	if (ir_priv.alt_key)
++		ir_priv.buffer[ir_priv.p_idx] = ir_priv.alt_key;
++	else
++#endif	// CONFIG_IR_ALT_KEY
++		ir_priv.buffer[ir_priv.p_idx] = ir_priv.released_key_code;
++	ir_priv.p_idx = (ir_priv.p_idx + 1) % buffer_size ;
++
++	wake_up_interruptible(&ir_wq);
++
++	ir_priv.released_key_sent = 1;
++	spin_unlock(ir_priv.lock);
++}	
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
++
+ int __init ir_init_module(void)
+ {
+ 	int status = 0;
+@@ -704,8 +843,14 @@
+ 	if (tangox_ir_enabled() == 0)
+ 		return(0);
+ 
++	wait_jiffies = wp_var = ((((wait_period * HZ) / 1000) == 0) ? 1 : ((wait_period * HZ) / 1000));
++
+ 	/* Initialize private data structure */
+ 	memset(&ir_priv, 0, sizeof(struct ir_private)); 
++#ifdef	CONFIG_IR_REPORT_RELEASE_KEY
++	init_timer( &ir_priv.release_timer );
++	ir_priv.release_timer.function = send_release_key_func; 
++#endif	// CONFIG_IR_REPORT_RELEASE_KEY
+ 	spin_lock_init(&ir_priv.lock);
+ 
+ #ifdef WITH_RC6_CONTROL
+@@ -737,6 +882,9 @@
+ 		return(-ENOMEM);
+ #endif //CONFIG_IR_HOLD_KEY
+ 	}
++#ifdef	CONFIG_IR_ALT_KEY
++	ir_priv.alt_key_table = kmalloc(max_keys * sizeof(unsigned long), GFP_KERNEL);
++#endif	// CONFIG_IR_ALT_KEY
+ 
+ 	/* Register device, and may be allocating major# */
+ 	status = register_chrdev(major_num, ir_devname, &ir_fops);
+@@ -764,7 +912,7 @@
+ #endif
+ 
+ 	/* Hook up ISR */
+-	if (request_irq(ir_irq, ir_isr, IRQF_SHARED, ir_devname, 
++	if (request_irq(ir_irq, ir_isr, IRQF_DISABLED /*| IRQF_SAMPLE_RANDOM*/, ir_devname, 
+ 			&ir_priv) != 0) {
+ 		printk(KERN_ERR "%s: cannot register IRQ (%d)\n", ir_devname,
+ 			ir_irq);
+@@ -774,6 +922,9 @@
+ #ifdef CONFIG_IR_HOLD_KEY
+ 		kfree(ir_priv.hold_key_table);
+ #endif //CONFIG_IR_HOLD_KEY
++#ifdef	CONFIG_IR_ALT_KEY
++		kfree(ir_priv.alt_key_table);
++#endif	// CONFIG_IR_ALT_KEY
+ 		return(-EIO);
+ 	}
+ 
+@@ -799,6 +950,10 @@
+ 	if (ir_priv.hold_key_table != NULL)
+ 		kfree(ir_priv.hold_key_table);
+ #endif //CONFIG_IR_HOLD_KEY
++#ifdef	CONFIG_IR_ALT_KEY
++	if (ir_priv.alt_key_table != NULL)
++		kfree(ir_priv.alt_key_table);
++#endif	// CONFIG_IR_ALT_KEY
+ 
+ 	printk(KERN_INFO "%s: driver unloaded\n", ir_devname);
+ }
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//drivers/char/wd_led_rst.c linux-2.6.22.19//drivers/char/wd_led_rst.c
+--- linux-2.6.22.19.ref//drivers/char/wd_led_rst.c	2009-09-24 09:11:26.000000000 +0200
++++ linux-2.6.22.19//drivers/char/wd_led_rst.c	2011-04-27 12:31:17.000000000 +0200
+@@ -289,6 +289,8 @@
+ #define	STR_POWER_LED_OFF	"power led off"
+ #define	STR_USB_POWER_OFF	"usb power off"
+ #define	STR_USB_POWER_ON	"usb power on"
++#define	STR_SYS_READY		"system ready"
++#define	STR_SYS_DOWN		"system down"
+ 
+ static	int	proc_write_led( struct file *file, const char *buffer, unsigned long count, void *data)
+ {
+@@ -298,7 +300,15 @@
+ 	len = (count > sizeof(buf)) ? sizeof(buf) : count;
+ 	copy_from_user(buf, buffer, len);
+ 
+-	if (!strncmp( buf, STR_BLINK_ON, strlen(STR_BLINK_ON))) {
++	if (!strncmp( buf, STR_SYS_READY, strlen(STR_SYS_READY))) {
++		em86xx_gpio_setdirection( 2, 1 );
++		em86xx_gpio_write( 2, 1 );
++	} else if (!strncmp( buf, STR_SYS_DOWN, strlen(STR_SYS_DOWN))) {
++		em86xx_gpio_setdirection( 2, 1 );
++		em86xx_gpio_write( 2, 0 );
++		em86xx_gpio_setdirection( 3, 1 );
++		em86xx_gpio_write( 3, 0 );
++	} else if (!strncmp( buf, STR_BLINK_ON, strlen(STR_BLINK_ON))) {
+ 		led_rst_ioctl( NULL, NULL, LED_RST_IOCSETSTA_BLINK_ON, 0);  
+ 	} else if (!strncmp( buf, STR_BLINK_OFF, strlen(STR_BLINK_OFF))) {
+ 		led_rst_ioctl( NULL, NULL, LED_RST_IOCSETSTA_BLINK_OFF, 0);  
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//drivers/net/Kconfig linux-2.6.22.19//drivers/net/Kconfig
+--- linux-2.6.22.19.ref//drivers/net/Kconfig	2009-09-24 09:11:26.000000000 +0200
++++ linux-2.6.22.19//drivers/net/Kconfig	2011-04-27 12:31:17.000000000 +0200
+@@ -1924,6 +1924,12 @@
+ 	  This led chip brand is C+ and the model is IP101A. The option use
+ 	  MII set phy some register bit to turn on or off the ethernet LED.
+ 
++config TANGOX_ENET_TX_DELAY_1000US
++	bool "Modify tx delay to be 1000us in worse case"
++	depends on TANGOX_ENET
++	help
++		The tangox enent driver losts package sometimes. Change the TX delay time to be 1000us in worse case. The default is 100us.
++
+ config ACENIC
+ 	tristate "Alteon AceNIC/3Com 3C985/NetGear GA620 Gigabit support"
+ 	depends on PCI
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//drivers/net/tangox_enet.c linux-2.6.22.19//drivers/net/tangox_enet.c
+--- linux-2.6.22.19.ref//drivers/net/tangox_enet.c	2009-09-24 09:11:26.000000000 +0200
++++ linux-2.6.22.19//drivers/net/tangox_enet.c	2011-04-27 12:31:17.000000000 +0200
+@@ -380,7 +380,11 @@
+ 
+ 	val = enet_readl(ENET_TXC_CR(priv->enet_mac_base)) & 0xffff;
+ #ifndef ENABLE_TX_CHAINING
++#ifdef CONFIG_TANGOX_ENET_TX_DELAY_1000US
++#define MAX_TX_TIMEOUT	1000	/* usec */
++#else
+ #define MAX_TX_TIMEOUT	100	/* usec */
++#endif
+ 	for (len = 0; len < MAX_TX_TIMEOUT; len++) {
+ 		val = enet_readl(ENET_TXC_CR(priv->enet_mac_base)) & 0xffff;
+ 		if (val & TCR_EN)
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//drivers/net/usb/usbnet.c linux-2.6.22.19//drivers/net/usb/usbnet.c
+--- linux-2.6.22.19.ref//drivers/net/usb/usbnet.c	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//drivers/net/usb/usbnet.c	2011-04-27 12:31:17.000000000 +0200
+@@ -1133,7 +1133,8 @@
+ 	status = -ENOMEM;
+ 
+ 	// set up our own records
+-	net = alloc_etherdev(sizeof(*dev));
++	//net = alloc_etherdev(sizeof(*dev));
++	net = alloc_netdev( sizeof(*dev), "usbeth%d", ether_setup );
+ 	if (!net) {
+ 		dbg ("can't kmalloc dev");
+ 		goto out;
+@@ -1158,7 +1159,7 @@
+ 
+ 	SET_MODULE_OWNER (net);
+ 	dev->net = net;
+-	strcpy (net->name, "usb%d");
++	strcpy (net->name, "usbeth%d");
+ 	memcpy (net->dev_addr, node_id, sizeof node_id);
+ 
+ 	/* rx and tx sides can use different message sizes;
+@@ -1193,7 +1194,7 @@
+ 		// can rename the link if it knows better.
+ 		if ((dev->driver_info->flags & FLAG_ETHER) != 0
+ 				&& (net->dev_addr [0] & 0x02) == 0)
+-			strcpy (net->name, "eth%d");
++			strcpy (net->name, "usbeth%d");
+ 
+ 		/* maybe the remote can't receive an Ethernet MTU */
+ 		if (net->mtu > (dev->hard_mtu - net->hard_header_len))
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//fs/fuse/inode.c linux-2.6.22.19//fs/fuse/inode.c
+--- linux-2.6.22.19.ref//fs/fuse/inode.c	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//fs/fuse/inode.c	2011-04-27 12:31:17.000000000 +0200
+@@ -449,6 +449,63 @@
+ 	return fuse_iget(sb, 1, 0, &attr);
+ }
+ 
++static struct dentry *fuse_get_dentry(struct super_block *sb, void *vobjp)
++{
++	__u32 *objp = vobjp;
++	unsigned long nodeid = objp[0];
++	__u32 generation = objp[1];
++	struct inode *inode;
++	struct dentry *entry;
++
++	if (nodeid == 0)
++	 return ERR_PTR(-ESTALE);
++
++	inode = ilookup5(sb, nodeid, fuse_inode_eq, &nodeid);
++	if (!inode || inode->i_generation != generation)
++	 return ERR_PTR(-ESTALE);
++
++	entry = d_alloc_anon(inode);
++	if (!entry) {
++	 iput(inode);
++	 return ERR_PTR(-ENOMEM);
++	}
++
++	return entry;
++}
++
++static int fuse_encode_fh(struct dentry *dentry, __u32 *fh, int *max_len,
++	 int connectable)
++{
++	struct inode *inode = dentry->d_inode;
++	int len = *max_len;
++	int type = 1;
++
++	if (len < 2 || (connectable && len < 4))
++	 return 255;
++
++	len = 2;
++	fh[0] = get_fuse_inode(inode)->nodeid;
++	fh[1] = inode->i_generation;
++	if (connectable && !S_ISDIR(inode->i_mode)) {
++	 struct inode *parent;
++
++	 spin_lock(&dentry->d_lock);
++	 parent = dentry->d_parent->d_inode;
++	 fh[2] = get_fuse_inode(parent)->nodeid;
++	 fh[3] = parent->i_generation;
++	 spin_unlock(&dentry->d_lock);
++	 len = 4;
++	 type = 2;
++	}
++	*max_len = len;
++	return type;
++}
++
++static struct export_operations fuse_export_operations = {
++	.get_dentry	= fuse_get_dentry,
++	.encode_fh = fuse_encode_fh,
++};
++
+ static const struct super_operations fuse_super_operations = {
+ 	.alloc_inode    = fuse_alloc_inode,
+ 	.destroy_inode  = fuse_destroy_inode,
+@@ -550,6 +607,7 @@
+ 	sb->s_magic = FUSE_SUPER_MAGIC;
+ 	sb->s_op = &fuse_super_operations;
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
++	sb->s_export_op = &fuse_export_operations;
+ 
+ 	file = fget(d.fd);
+ 	if (!file)
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//fs/partitions/efi.c linux-2.6.22.19//fs/partitions/efi.c
+--- linux-2.6.22.19.ref//fs/partitions/efi.c	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//fs/partitions/efi.c	2011-04-27 12:31:17.000000000 +0200
+@@ -1,7 +1,9 @@
+ /************************************************************
+  * EFI GUID Partition Table handling
+- * Per Intel EFI Specification v1.02
+- * http://developer.intel.com/technology/efi/efi.htm
++ *
++ * http://www.uefi.org/specs/
++ * http://www.intel.com/technology/efi/
++ *
+  * efi.[ch] by Matt Domsch <Matt_Domsch@dell.com>
+  *   Copyright 2000,2001,2002,2004 Dell Inc.
+  *
+@@ -92,16 +94,10 @@
+  *
+  ************************************************************/
+ #include <linux/crc32.h>
++#include <linux/math64.h>
+ #include "check.h"
+ #include "efi.h"
+ 
+-#undef EFI_DEBUG
+-#ifdef EFI_DEBUG
+-#define Dprintk(x...) printk(KERN_DEBUG x)
+-#else
+-#define Dprintk(x...)
+-#endif
+-
+ /* This allows a kernel command line option 'gpt' to override
+  * the test for invalid PMBR.  Not __initdata because reloading
+  * the partition tables happens after init too.
+@@ -148,7 +144,8 @@
+ {
+ 	if (!bdev || !bdev->bd_inode)
+ 		return 0;
+-	return (bdev->bd_inode->i_size >> 9) - 1ULL;
++	return div_u64(bdev->bd_inode->i_size,
++		       bdev_hardsect_size(bdev)) - 1ULL;
+ }
+ 
+ static inline int
+@@ -195,6 +192,7 @@
+ read_lba(struct block_device *bdev, u64 lba, u8 * buffer, size_t count)
+ {
+ 	size_t totalreadcount = 0;
++	sector_t n = lba * (bdev_hardsect_size(bdev) / 512);
+ 
+ 	if (!bdev || !buffer || lba > last_lba(bdev))
+                 return 0;
+@@ -202,7 +200,7 @@
+ 	while (count) {
+ 		int copied = 512;
+ 		Sector sect;
+-		unsigned char *data = read_dev_sector(bdev, lba++, &sect);
++		unsigned char *data = read_dev_sector(bdev, n++, &sect);
+ 		if (!data)
+ 			break;
+ 		if (copied > count)
+@@ -264,15 +262,16 @@
+ alloc_read_gpt_header(struct block_device *bdev, u64 lba)
+ {
+ 	gpt_header *gpt;
++	unsigned ssz = bdev_hardsect_size(bdev);
++
+ 	if (!bdev)
+ 		return NULL;
+ 
+-	gpt = kzalloc(sizeof (gpt_header), GFP_KERNEL);
++	gpt = kzalloc(ssz, GFP_KERNEL);
+ 	if (!gpt)
+ 		return NULL;
+ 
+-	if (read_lba(bdev, lba, (u8 *) gpt,
+-		     sizeof (gpt_header)) < sizeof (gpt_header)) {
++	if (read_lba(bdev, lba, (u8 *) gpt, ssz) < ssz) {
+ 		kfree(gpt);
+                 gpt=NULL;
+ 		return NULL;
+@@ -305,10 +304,10 @@
+ 
+ 	/* Check the GUID Partition Table signature */
+ 	if (le64_to_cpu((*gpt)->signature) != GPT_HEADER_SIGNATURE) {
+-		Dprintk("GUID Partition Table Header signature is wrong:"
+-			"%lld != %lld\n",
+-			(unsigned long long)le64_to_cpu((*gpt)->signature),
+-			(unsigned long long)GPT_HEADER_SIGNATURE);
++		pr_debug("GUID Partition Table Header signature is wrong:"
++			 "%lld != %lld\n",
++			 (unsigned long long)le64_to_cpu((*gpt)->signature),
++			 (unsigned long long)GPT_HEADER_SIGNATURE);
+ 		goto fail;
+ 	}
+ 
+@@ -318,9 +317,8 @@
+ 	crc = efi_crc32((const unsigned char *) (*gpt), le32_to_cpu((*gpt)->header_size));
+ 
+ 	if (crc != origcrc) {
+-		Dprintk
+-		    ("GUID Partition Table Header CRC is wrong: %x != %x\n",
+-		     crc, origcrc);
++		pr_debug("GUID Partition Table Header CRC is wrong: %x != %x\n",
++			 crc, origcrc);
+ 		goto fail;
+ 	}
+ 	(*gpt)->header_crc32 = cpu_to_le32(origcrc);
+@@ -328,9 +326,9 @@
+ 	/* Check that the my_lba entry points to the LBA that contains
+ 	 * the GUID Partition Table */
+ 	if (le64_to_cpu((*gpt)->my_lba) != lba) {
+-		Dprintk("GPT my_lba incorrect: %lld != %lld\n",
+-			(unsigned long long)le64_to_cpu((*gpt)->my_lba),
+-			(unsigned long long)lba);
++		pr_debug("GPT my_lba incorrect: %lld != %lld\n",
++			 (unsigned long long)le64_to_cpu((*gpt)->my_lba),
++			 (unsigned long long)lba);
+ 		goto fail;
+ 	}
+ 
+@@ -339,15 +337,15 @@
+ 	 */
+ 	lastlba = last_lba(bdev);
+ 	if (le64_to_cpu((*gpt)->first_usable_lba) > lastlba) {
+-		Dprintk("GPT: first_usable_lba incorrect: %lld > %lld\n",
+-			(unsigned long long)le64_to_cpu((*gpt)->first_usable_lba),
+-			(unsigned long long)lastlba);
++		pr_debug("GPT: first_usable_lba incorrect: %lld > %lld\n",
++			 (unsigned long long)le64_to_cpu((*gpt)->first_usable_lba),
++			 (unsigned long long)lastlba);
+ 		goto fail;
+ 	}
+ 	if (le64_to_cpu((*gpt)->last_usable_lba) > lastlba) {
+-		Dprintk("GPT: last_usable_lba incorrect: %lld > %lld\n",
+-			(unsigned long long)le64_to_cpu((*gpt)->last_usable_lba),
+-			(unsigned long long)lastlba);
++		pr_debug("GPT: last_usable_lba incorrect: %lld > %lld\n",
++			 (unsigned long long)le64_to_cpu((*gpt)->last_usable_lba),
++			 (unsigned long long)lastlba);
+ 		goto fail;
+ 	}
+ 
+@@ -360,7 +358,7 @@
+ 			le32_to_cpu((*gpt)->sizeof_partition_entry));
+ 
+ 	if (crc != le32_to_cpu((*gpt)->partition_entry_array_crc32)) {
+-		Dprintk("GUID Partitition Entry Array CRC check failed.\n");
++		pr_debug("GUID Partitition Entry Array CRC check failed.\n");
+ 		goto fail_ptes;
+ 	}
+ 
+@@ -609,6 +607,7 @@
+ 	gpt_header *gpt = NULL;
+ 	gpt_entry *ptes = NULL;
+ 	u32 i;
++	unsigned ssz = bdev_hardsect_size(bdev) / 512;
+ 
+ 	if (!find_valid_gpt(bdev, &gpt, &ptes) || !gpt || !ptes) {
+ 		kfree(gpt);
+@@ -616,16 +615,17 @@
+ 		return 0;
+ 	}
+ 
+-	Dprintk("GUID Partition Table is valid!  Yea!\n");
++	pr_debug("GUID Partition Table is valid!  Yea!\n");
+ 
+ 	for (i = 0; i < le32_to_cpu(gpt->num_partition_entries) && i < state->limit-1; i++) {
++		u64 start = le64_to_cpu(ptes[i].starting_lba);
++		u64 size = le64_to_cpu(ptes[i].ending_lba) -
++			   le64_to_cpu(ptes[i].starting_lba) + 1ULL;
++
+ 		if (!is_pte_valid(&ptes[i], last_lba(bdev)))
+ 			continue;
+ 
+-		put_partition(state, i+1, le64_to_cpu(ptes[i].starting_lba),
+-				 (le64_to_cpu(ptes[i].ending_lba) -
+-                                  le64_to_cpu(ptes[i].starting_lba) +
+-				  1ULL));
++		put_partition(state, i+1, start * ssz, size * ssz);
+ 
+ 		/* If this is a RAID volume, tell md */
+ 		if (!efi_guidcmp(ptes[i].partition_type_guid,
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//fs/partitions/mac.c linux-2.6.22.19//fs/partitions/mac.c
+--- linux-2.6.22.19.ref//fs/partitions/mac.c	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//fs/partitions/mac.c	2011-04-27 12:31:17.000000000 +0200
+@@ -33,7 +33,7 @@
+ 	Sector sect;
+ 	unsigned char *data;
+ 	int blk, blocks_in_map;
+-	unsigned secsize;
++	sector_t secsize;
+ #ifdef CONFIG_PPC_PMAC
+ 	int found_root = 0;
+ 	int found_root_goodness = 0;
+@@ -62,7 +62,7 @@
+ 	printk(" [mac]");
+ 	blocks_in_map = be32_to_cpu(part->map_count);
+ 	for (blk = 1; blk <= blocks_in_map; ++blk) {
+-		int pos = blk * secsize;
++		sector_t pos = blk * secsize;
+ 		put_dev_sector(sect);
+ 		data = read_dev_sector(bdev, pos/512, &sect);
+ 		if (!data)
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//fs/partitions/msdos.c linux-2.6.22.19//fs/partitions/msdos.c
+--- linux-2.6.22.19.ref//fs/partitions/msdos.c	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//fs/partitions/msdos.c	2011-04-27 12:31:17.000000000 +0200
+@@ -18,7 +18,7 @@
+  *
+  *  Re-organised Feb 1998 Russell King
+  */
+-
++#include <linux/msdos_fs.h>
+ 
+ #include "check.h"
+ #include "msdos.h"
+@@ -31,14 +31,17 @@
+  */
+ #include <asm/unaligned.h>
+ 
+-#define SYS_IND(p)	(get_unaligned(&p->sys_ind))
+-#define NR_SECTS(p)	({ __le32 __a =	get_unaligned(&p->nr_sects);	\
+-				le32_to_cpu(__a); \
+-			})
+-
+-#define START_SECT(p)	({ __le32 __a =	get_unaligned(&p->start_sect);	\
+-				le32_to_cpu(__a); \
+-			})
++#define SYS_IND(p)	get_unaligned(&p->sys_ind)
++
++static inline sector_t nr_sects(struct partition *p)
++{
++	return (sector_t)le32_to_cpup(&p->nr_sects);
++}
++
++static inline sector_t start_sect(struct partition *p)
++{
++	return (sector_t)le32_to_cpup(&p->start_sect);
++}
+ 
+ static inline int is_extended_partition(struct partition *p)
+ {
+@@ -104,13 +107,13 @@
+ 
+ static void
+ parse_extended(struct parsed_partitions *state, struct block_device *bdev,
+-			u32 first_sector, u32 first_size)
++			sector_t first_sector, sector_t first_size)
+ {
+ 	struct partition *p;
+ 	Sector sect;
+ 	unsigned char *data;
+-	u32 this_sector, this_size;
+-	int sector_size = bdev_hardsect_size(bdev) / 512;
++	sector_t this_sector, this_size;
++	sector_t sector_size = bdev_hardsect_size(bdev) / 512;
+ 	int loopct = 0;		/* number of links followed
+ 				   without finding a data partition */
+ 	int i;
+@@ -145,14 +148,14 @@
+ 		 * First process the data partition(s)
+ 		 */
+ 		for (i=0; i<4; i++, p++) {
+-			u32 offs, size, next;
+-			if (!NR_SECTS(p) || is_extended_partition(p))
++			sector_t offs, size, next;
++			if (!nr_sects(p) || is_extended_partition(p))
+ 				continue;
+ 
+ 			/* Check the 3rd and 4th entries -
+ 			   these sometimes contain random garbage */
+-			offs = START_SECT(p)*sector_size;
+-			size = NR_SECTS(p)*sector_size;
++			offs = start_sect(p)*sector_size;
++			size = nr_sects(p)*sector_size;
+ 			next = this_sector + offs;
+ 			if (i >= 2) {
+ 				if (offs + size > this_size)
+@@ -179,13 +182,13 @@
+ 		 */
+ 		p -= 4;
+ 		for (i=0; i<4; i++, p++)
+-			if (NR_SECTS(p) && is_extended_partition(p))
++			if (nr_sects(p) && is_extended_partition(p))
+ 				break;
+ 		if (i == 4)
+ 			goto done;	 /* nothing left to do */
+ 
+-		this_sector = first_sector + START_SECT(p) * sector_size;
+-		this_size = NR_SECTS(p) * sector_size;
++		this_sector = first_sector + start_sect(p) * sector_size;
++		this_size = nr_sects(p) * sector_size;
+ 		put_dev_sector(sect);
+ 	}
+ done:
+@@ -197,12 +200,13 @@
+ 
+ static void
+ parse_solaris_x86(struct parsed_partitions *state, struct block_device *bdev,
+-			u32 offset, u32 size, int origin)
++			sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_SOLARIS_X86_PARTITION
+ 	Sector sect;
+ 	struct solaris_x86_vtoc *v;
+ 	int i;
++	short max_nparts;
+ 
+ 	v = (struct solaris_x86_vtoc *)read_dev_sector(bdev, offset+1, &sect);
+ 	if (!v)
+@@ -218,7 +222,9 @@
+ 		put_dev_sector(sect);
+ 		return;
+ 	}
+-	for (i=0; i<SOLARIS_X86_NUMSLICE && state->next<state->limit; i++) {
++	/* Ensure we can handle previous case of VTOC with 8 entries gracefully */
++	max_nparts = le16_to_cpu (v->v_nparts) > 8 ? SOLARIS_X86_NUMSLICE : 8;
++	for (i=0; i<max_nparts && state->next<state->limit; i++) {
+ 		struct solaris_x86_slice *s = &v->v_slice[i];
+ 		if (s->s_size == 0)
+ 			continue;
+@@ -241,7 +247,7 @@
+  */
+ static void
+ parse_bsd(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin, char *flavour,
++		sector_t offset, sector_t size, int origin, char *flavour,
+ 		int max_partitions)
+ {
+ 	Sector sect;
+@@ -260,7 +266,7 @@
+ 	if (le16_to_cpu(l->d_npartitions) < max_partitions)
+ 		max_partitions = le16_to_cpu(l->d_npartitions);
+ 	for (p = l->d_partitions; p - l->d_partitions < max_partitions; p++) {
+-		u32 bsd_start, bsd_size;
++		sector_t bsd_start, bsd_size;
+ 
+ 		if (state->next == state->limit)
+ 			break;
+@@ -287,7 +293,7 @@
+ 
+ static void
+ parse_freebsd(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin)
++		sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_BSD_DISKLABEL
+ 	parse_bsd(state, bdev, offset, size, origin,
+@@ -297,7 +303,7 @@
+ 
+ static void
+ parse_netbsd(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin)
++		sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_BSD_DISKLABEL
+ 	parse_bsd(state, bdev, offset, size, origin,
+@@ -307,7 +313,7 @@
+ 
+ static void
+ parse_openbsd(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin)
++		sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_BSD_DISKLABEL
+ 	parse_bsd(state, bdev, offset, size, origin,
+@@ -321,7 +327,7 @@
+  */
+ static void
+ parse_unixware(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin)
++		sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_UNIXWARE_DISKLABEL
+ 	Sector sect;
+@@ -345,7 +351,8 @@
+ 
+ 		if (p->s_label != UNIXWARE_FS_UNUSED)
+ 			put_partition(state, state->next++,
+-						START_SECT(p), NR_SECTS(p));
++				      le32_to_cpu(p->start_sect),
++				      le32_to_cpu(p->nr_sects));
+ 		p++;
+ 	}
+ 	put_dev_sector(sect);
+@@ -360,7 +367,7 @@
+  */
+ static void
+ parse_minix(struct parsed_partitions *state, struct block_device *bdev,
+-		u32 offset, u32 size, int origin)
++		sector_t offset, sector_t size, int origin)
+ {
+ #ifdef CONFIG_MINIX_SUBPARTITION
+ 	Sector sect;
+@@ -387,7 +394,7 @@
+ 			/* add each partition in use */
+ 			if (SYS_IND(p) == MINIX_PARTITION)
+ 				put_partition(state, state->next++,
+-					      START_SECT(p), NR_SECTS(p));
++					      start_sect(p), nr_sects(p));
+ 		}
+ 		printk(" >\n");
+ 	}
+@@ -398,7 +405,7 @@
+ static struct {
+ 	unsigned char id;
+ 	void (*parse)(struct parsed_partitions *, struct block_device *,
+-			u32, u32, int);
++			sector_t, sector_t, int);
+ } subtypes[] = {
+ 	{FREEBSD_PARTITION, parse_freebsd},
+ 	{NETBSD_PARTITION, parse_netbsd},
+@@ -412,10 +419,12 @@
+  
+ int msdos_partition(struct parsed_partitions *state, struct block_device *bdev)
+ {
+-	int sector_size = bdev_hardsect_size(bdev) / 512;
++	sector_t sector_size = bdev_hardsect_size(bdev) / 512;
++
+ 	Sector sect;
+ 	unsigned char *data;
+ 	struct partition *p;
++	struct fat_boot_sector *fb;
+ 	int slot;
+ 
+ 	data = read_dev_sector(bdev, 0, &sect);
+@@ -441,8 +450,21 @@
+ 	p = (struct partition *) (data + 0x1be);
+ 	for (slot = 1; slot <= 4; slot++, p++) {
+ 		if (p->boot_ind != 0 && p->boot_ind != 0x80) {
+-			put_dev_sector(sect);
+-			return 0;
++			/*
++			 * Even without a valid boot inidicator value
++			 * its still possible this is valid FAT filesystem
++			 * without a partition table.
++			 */
++			fb = (struct fat_boot_sector *) data;
++			if (slot == 1 && fb->reserved && fb->fats
++				&& fat_valid_media(fb->media)) {
++				printk("\n");
++				put_dev_sector(sect);
++				return 1;
++			} else {
++				put_dev_sector(sect);
++				return 0;
++			}
+ 		}
+ 	}
+ 
+@@ -466,14 +488,21 @@
+ 
+ 	state->next = 5;
+ 	for (slot = 1 ; slot <= 4 ; slot++, p++) {
+-		u32 start = START_SECT(p)*sector_size;
+-		u32 size = NR_SECTS(p)*sector_size;
++		sector_t start = start_sect(p)*sector_size;
++		sector_t size = nr_sects(p)*sector_size;
+ 		if (!size)
+ 			continue;
+ 		if (is_extended_partition(p)) {
+-			/* prevent someone doing mkfs or mkswap on an
+-			   extended partition, but leave room for LILO */
+-			put_partition(state, slot, start, size == 1 ? 1 : 2);
++			/*
++			 * prevent someone doing mkfs or mkswap on an
++			 * extended partition, but leave room for LILO
++			 * FIXME: this uses one logical sector for > 512b
++			 * sector, although it may not be enough/proper.
++			 */
++			sector_t n = 2;
++			n = min(size, max(sector_size, n));
++			put_partition(state, slot, start, n);
++
+ 			printk(" <");
+ 			parse_extended(state, bdev, start, size);
+ 			printk(" >");
+@@ -496,7 +525,7 @@
+ 		unsigned char id = SYS_IND(p);
+ 		int n;
+ 
+-		if (!NR_SECTS(p))
++		if (!nr_sects(p))
+ 			continue;
+ 
+ 		for (n = 0; subtypes[n].parse && id != subtypes[n].id; n++)
+@@ -504,8 +533,8 @@
+ 
+ 		if (!subtypes[n].parse)
+ 			continue;
+-		subtypes[n].parse(state, bdev, START_SECT(p)*sector_size,
+-						NR_SECTS(p)*sector_size, slot);
++		subtypes[n].parse(state, bdev, start_sect(p)*sector_size,
++						nr_sects(p)*sector_size, slot);
+ 	}
+ 	put_dev_sector(sect);
+ 	return 1;
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//include/linux/math64.h linux-2.6.22.19//include/linux/math64.h
+--- linux-2.6.22.19.ref//include/linux/math64.h	1970-01-01 01:00:00.000000000 +0100
++++ linux-2.6.22.19//include/linux/math64.h	2011-04-27 12:31:17.000000000 +0200
+@@ -0,0 +1,105 @@
++#ifndef _LINUX_MATH64_H
++#define _LINUX_MATH64_H
++
++#include <linux/types.h>
++#include <asm/div64.h>
++
++#if BITS_PER_LONG == 64
++
++/**
++ * div_u64_rem - unsigned 64bit divide with 32bit divisor with remainder
++ *
++ * This is commonly provided by 32bit archs to provide an optimized 64bit
++ * divide.
++ */
++static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
++{
++	*remainder = dividend % divisor;
++	return dividend / divisor;
++}
++
++/**
++ * div_s64_rem - signed 64bit divide with 32bit divisor with remainder
++ */
++static inline s64 div_s64_rem(s64 dividend, s32 divisor, s32 *remainder)
++{
++	*remainder = dividend % divisor;
++	return dividend / divisor;
++}
++
++/**
++ * div64_u64 - unsigned 64bit divide with 64bit divisor
++ */
++static inline u64 div64_u64(u64 dividend, u64 divisor)
++{
++	return dividend / divisor;
++}
++
++#elif BITS_PER_LONG == 32
++
++#ifndef div_u64_rem
++static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
++{
++	*remainder = do_div(dividend, divisor);
++	return dividend;
++}
++#endif
++
++#ifndef div_s64_rem
++extern s64 div_s64_rem(s64 dividend, s32 divisor, s32 *remainder);
++#endif
++
++#ifndef div64_u64
++extern u64 div64_u64(u64 dividend, u64 divisor);
++#endif
++
++#endif /* BITS_PER_LONG */
++
++/**
++ * div_u64 - unsigned 64bit divide with 32bit divisor
++ *
++ * This is the most common 64bit divide and should be used if possible,
++ * as many 32bit archs can optimize this variant better than a full 64bit
++ * divide.
++ */
++#ifndef div_u64
++static inline u64 div_u64(u64 dividend, u32 divisor)
++{
++	u32 remainder;
++	return div_u64_rem(dividend, divisor, &remainder);
++}
++#endif
++
++/**
++ * div_s64 - signed 64bit divide with 32bit divisor
++ */
++#ifndef div_s64
++static inline s64 div_s64(s64 dividend, s32 divisor)
++{
++	s32 remainder;
++	return div_s64_rem(dividend, divisor, &remainder);
++}
++#endif
++
++u32 iter_div_u64_rem(u64 dividend, u32 divisor, u64 *remainder);
++
++static __always_inline u32
++__iter_div_u64_rem(u64 dividend, u32 divisor, u64 *remainder)
++{
++	u32 ret = 0;
++
++	while (dividend >= divisor) {
++		/* The following asm() prevents the compiler from
++		   optimising this loop into a modulo operation.  */
++		asm("" : "+rm"(dividend));
++
++		dividend -= divisor;
++		ret++;
++	}
++
++	*remainder = dividend;
++
++	return ret;
++}
++
++#endif /* _LINUX_MATH64_H */
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//include/linux/msdos_fs.h linux-2.6.22.19//include/linux/msdos_fs.h
+--- linux-2.6.22.19.ref//include/linux/msdos_fs.h	2008-02-26 10:54:25.000000000 +0100
++++ linux-2.6.22.19//include/linux/msdos_fs.h	2011-04-27 12:31:17.000000000 +0200
+@@ -429,6 +429,12 @@
+ int fat_cache_init(void);
+ void fat_cache_destroy(void);
+ 
++/* media of boot sector */
++static inline int fat_valid_media(u8 media)
++{
++	return 0xf8 <= media || media == 0xf0;
++}
++
+ #endif /* __KERNEL__ */
+ 
+ #endif
+diff -Naur '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19.ref//scripts/build_cpu_xload.bash linux-2.6.22.19//scripts/build_cpu_xload.bash
+--- linux-2.6.22.19.ref//scripts/build_cpu_xload.bash	2009-09-24 09:11:26.000000000 +0200
++++ linux-2.6.22.19//scripts/build_cpu_xload.bash	2011-04-27 12:31:17.000000000 +0200
+@@ -44,6 +44,6 @@
+ 
+ echo CPUPKG Image Map : size=$SIZE
+ 
+-openssl sha1 -sign $PRIVATE_KEY < $CPUPKG_BIN | revbytes.pl > $CPUPKG_SIG
++openssl sha1 -sign $PRIVATE_KEY -passin env:CONF_SECURITY_USE_CPU_BINDING_PASSWORD < $CPUPKG_BIN | revbytes.pl > $CPUPKG_SIG
+ mkxload.bash $XSDK_ROOT $REV $CERTID $CPUPKG_BIN $CPUPKG_SIG $XLOAD_BIN
+ 

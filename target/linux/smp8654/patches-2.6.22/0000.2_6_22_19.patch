@@ -1,0 +1,3558 @@
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/common/dbdma.c linux_kernel_2.6.22.19-19/arch/mips/au1000/common/dbdma.c
+--- linux-2.6.22.19/arch/mips/au1000/common/dbdma.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/common/dbdma.c	2008-02-26 10:54:25.000000000 +0100
+@@ -161,22 +161,22 @@
+ 	{ DSCR_CMD0_ALWAYS, DEV_FLAGS_ANYUSE, 0, 0, 0x00000000, 0, 0 },
+ 
+ 	/* Provide 16 user definable device types */
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
+-	{ 0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
++	{ ~0, 0, 0, 0, 0, 0, 0 },
+ };
+ 
+ #define DBDEV_TAB_SIZE (sizeof(dbdev_tab) / sizeof(dbdev_tab_t))
+@@ -209,7 +209,7 @@
+ 	dbdev_tab_t *p=NULL;
+ 	static u16 new_id=0x1000;
+ 
+-	p = find_dbdev_id(0);
++	p = find_dbdev_id(~0);
+ 	if ( NULL != p )
+ 	{
+ 		memcpy(p, dev, sizeof(dbdev_tab_t));
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/common/pci.c linux_kernel_2.6.22.19-19/arch/mips/au1000/common/pci.c
+--- linux-2.6.22.19/arch/mips/au1000/common/pci.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/common/pci.c	2008-02-26 10:54:25.000000000 +0100
+@@ -39,15 +39,15 @@
+ 
+ /* TBD */
+ static struct resource pci_io_resource = {
+-	.start	= (resource_size_t)PCI_IO_START,
+-	.end	= (resource_size_t)PCI_IO_END,
++	.start	= PCI_IO_START,
++	.end	= PCI_IO_END,
+ 	.name	= "PCI IO space",
+ 	.flags	= IORESOURCE_IO
+ };
+ 
+ static struct resource pci_mem_resource = {
+-	.start	= (resource_size_t)PCI_MEM_START,
+-	.end	= (resource_size_t)PCI_MEM_END,
++	.start	= PCI_MEM_START,
++	.end	= PCI_MEM_END,
+ 	.name	= "PCI memory space",
+ 	.flags	= IORESOURCE_MEM
+ };
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/common/setup.c linux_kernel_2.6.22.19-19/arch/mips/au1000/common/setup.c
+--- linux-2.6.22.19/arch/mips/au1000/common/setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/common/setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -147,12 +147,11 @@
+ 
+ #ifdef CONFIG_PCI
+ 	{
+-		u32 start, end;
++		u32 start = (u32)Au1500_PCI_MEM_START;
++		u32 end   = (u32)Au1500_PCI_MEM_END;
+ 
+-		start = (u32)Au1500_PCI_MEM_START;
+-		end = (u32)Au1500_PCI_MEM_END;
+-		/* check for pci memory window */
+-		if ((phys_addr >= start) && ((phys_addr + size) < end))
++		/* Check for PCI memory window */
++		if (phys_addr >= start && (phys_addr + size - 1) <= end)
+ 			return (phys_t)
+ 			       ((phys_addr - start) + Au1500_PCI_MEM_START);
+ 	}
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/Kconfig linux_kernel_2.6.22.19-19/arch/mips/au1000/Kconfig
+--- linux-2.6.22.19/arch/mips/au1000/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/Kconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -7,7 +7,6 @@
+ 	bool "4G Systems MTX-1 board"
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+-	select RESOURCES_64BIT if PCI
+ 	select SOC_AU1500
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+@@ -22,7 +21,6 @@
+ 	select SOC_AU1000
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+ config MIPS_DB1100
+@@ -44,7 +42,6 @@
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+ 	select MIPS_DISABLE_OBSOLETE_IDE
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+@@ -54,7 +51,6 @@
+ 	select HW_HAS_PCI
+ 	select DMA_NONCOHERENT
+ 	select MIPS_DISABLE_OBSOLETE_IDE
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+ config MIPS_MIRAGE
+@@ -68,7 +64,6 @@
+ 	select SOC_AU1000
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+-	select RESOURCES_64BIT if PCI
+ 	select SWAP_IO_SPACE
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+@@ -77,7 +72,6 @@
+ 	select SOC_AU1100
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+-	select RESOURCES_64BIT if PCI
+ 	select SWAP_IO_SPACE
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+@@ -86,7 +80,6 @@
+ 	select SOC_AU1200
+ 	select DMA_NONCOHERENT
+ 	select MIPS_DISABLE_OBSOLETE_IDE
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+ config MIPS_PB1500
+@@ -94,7 +87,6 @@
+ 	select SOC_AU1500
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+ config MIPS_PB1550
+@@ -103,7 +95,6 @@
+ 	select DMA_NONCOHERENT
+ 	select HW_HAS_PCI
+ 	select MIPS_DISABLE_OBSOLETE_IDE
+-	select RESOURCES_64BIT if PCI
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 
+ config MIPS_XXS1500
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/mtx-1/board_setup.c linux_kernel_2.6.22.19-19/arch/mips/au1000/mtx-1/board_setup.c
+--- linux-2.6.22.19/arch/mips/au1000/mtx-1/board_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/mtx-1/board_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -54,11 +54,11 @@
+ 
+ void __init board_setup(void)
+ {
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 	// enable USB power switch
+ 	au_writel( au_readl(GPIO2_DIR) | 0x10, GPIO2_DIR );
+ 	au_writel( 0x100000, GPIO2_OUTPUT );
+-#endif // defined (CONFIG_USB_OHCI)
++#endif /* defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE) */
+ 
+ #ifdef CONFIG_PCI
+ #if defined(__MIPSEB__)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/pb1000/board_setup.c linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1000/board_setup.c
+--- linux-2.6.22.19/arch/mips/au1000/pb1000/board_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1000/board_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -54,7 +54,7 @@
+ 	au_writel(0, SYS_PINSTATERD);
+ 	udelay(100);
+ 
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 	/* zero and disable FREQ2 */
+ 	sys_freqctrl = au_readl(SYS_FREQCTRL0);
+ 	sys_freqctrl &= ~0xFFF00000;
+@@ -102,7 +102,7 @@
+ 	/*
+ 	 * Route 48MHz FREQ2 into USB Host and/or Device
+ 	 */
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 	sys_clksrc |= ((4<<12) | (0<<11) | (0<<10));
+ #endif
+ 	au_writel(sys_clksrc, SYS_CLKSRC);
+@@ -116,7 +116,7 @@
+ 	au_writel(pin_func, SYS_PINFUNC);
+ 	au_writel(0x2800, SYS_TRIOUTCLR);
+ 	au_writel(0x0030, SYS_OUTPUTCLR);
+-#endif // defined (CONFIG_USB_OHCI)
++#endif /* defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE) */
+ 
+ 	// make gpio 15 an input (for interrupt line)
+ 	pin_func = au_readl(SYS_PINFUNC) & (u32)(~0x100);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/pb1100/board_setup.c linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1100/board_setup.c
+--- linux-2.6.22.19/arch/mips/au1000/pb1100/board_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1100/board_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -54,7 +54,7 @@
+ 	au_writel(0, SYS_PININPUTEN);
+ 	udelay(100);
+ 
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 	{
+ 		u32 pin_func, sys_freqctrl, sys_clksrc;
+ 
+@@ -98,7 +98,7 @@
+ 		pin_func |= 0x8000;
+ 		au_writel(pin_func, SYS_PINFUNC);
+ 	}
+-#endif // defined (CONFIG_USB_OHCI)
++#endif /* defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE) */
+ 
+ 	/* Enable sys bus clock divider when IDLE state or no bus activity. */
+ 	au_writel(au_readl(SYS_POWERCTRL) | (0x3 << 5), SYS_POWERCTRL);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/au1000/pb1500/board_setup.c linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1500/board_setup.c
+--- linux-2.6.22.19/arch/mips/au1000/pb1500/board_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/au1000/pb1500/board_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -56,7 +56,7 @@
+ 	au_writel(0, SYS_PINSTATERD);
+ 	udelay(100);
+ 
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 
+ 	/* GPIO201 is input for PCMCIA card detect */
+ 	/* GPIO203 is input for PCMCIA interrupt request */
+@@ -85,7 +85,7 @@
+ 	/*
+ 	 * Route 48MHz FREQ2 into USB Host and/or Device
+ 	 */
+-#ifdef CONFIG_USB_OHCI
++#if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ 	sys_clksrc |= ((4<<12) | (0<<11) | (0<<10));
+ #endif
+ 	au_writel(sys_clksrc, SYS_CLKSRC);
+@@ -95,7 +95,7 @@
+ 	// 2nd USB port is USB host
+ 	pin_func |= 0x8000;
+ 	au_writel(pin_func, SYS_PINFUNC);
+-#endif // defined (CONFIG_USB_OHCI)
++#endif /* defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE) */
+ 
+ 
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/db1000_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/db1000_defconfig
+--- linux-2.6.22.19/arch/mips/configs/db1000_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/db1000_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -745,7 +745,6 @@
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/db1100_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/db1100_defconfig
+--- linux-2.6.22.19/arch/mips/configs/db1100_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/db1100_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -721,7 +721,6 @@
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/db1200_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/db1200_defconfig
+--- linux-2.6.22.19/arch/mips/configs/db1200_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/db1200_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -782,7 +782,6 @@
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/db1500_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/db1500_defconfig
+--- linux-2.6.22.19/arch/mips/configs/db1500_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/db1500_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -818,7 +818,6 @@
+ # CONFIG_VT is not set
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/db1550_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/db1550_defconfig
+--- linux-2.6.22.19/arch/mips/configs/db1550_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/db1550_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -863,7 +863,6 @@
+ # CONFIG_VT is not set
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/pb1100_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/pb1100_defconfig
+--- linux-2.6.22.19/arch/mips/configs/pb1100_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/pb1100_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -738,7 +738,6 @@
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/pb1500_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/pb1500_defconfig
+--- linux-2.6.22.19/arch/mips/configs/pb1500_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/pb1500_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -856,7 +856,6 @@
+ # CONFIG_VT is not set
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/configs/pb1550_defconfig linux_kernel_2.6.22.19-19/arch/mips/configs/pb1550_defconfig
+--- linux-2.6.22.19/arch/mips/configs/pb1550_defconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/configs/pb1550_defconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -849,7 +849,6 @@
+ # CONFIG_VT is not set
+ # CONFIG_SERIAL_NONSTANDARD is not set
+ # CONFIG_AU1X00_GPIO is not set
+-# CONFIG_TS_AU1X00_ADS7846 is not set
+ 
+ #
+ # Serial drivers
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/jmr3927/rbhma3100/setup.c linux_kernel_2.6.22.19-19/arch/mips/jmr3927/rbhma3100/setup.c
+--- linux-2.6.22.19/arch/mips/jmr3927/rbhma3100/setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/jmr3927/rbhma3100/setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -434,7 +434,7 @@
+ 
+ static int __init jmr3927_rtc_init(void)
+ {
+-	struct resource res = {
++	static struct resource __initdata res = {
+ 		.start	= JMR3927_IOC_NVRAMB_ADDR - IO_BASE,
+ 		.end	= JMR3927_IOC_NVRAMB_ADDR - IO_BASE + 0x800 - 1,
+ 		.flags	= IORESOURCE_MEM,
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/Kconfig linux_kernel_2.6.22.19-19/arch/mips/Kconfig
+--- linux-2.6.22.19/arch/mips/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/Kconfig	2011-08-23 13:02:26.000000000 +0200
+@@ -450,8 +450,7 @@
+ 	  here.
+ 
+ config SGI_IP32
+-	bool "SGI IP32 (O2) (EXPERIMENTAL)"
+-	depends on EXPERIMENTAL
++	bool "SGI IP32 (O2)"
+ 	select ARC
+ 	select ARC32
+ 	select BOOT_ELF32
+@@ -841,15 +840,10 @@
+ config MIPS_RM9122
+ 	bool
+ 	select SERIAL_RM9000
+-	select GPI_RM9000
+-	select WDT_RM9000
+ 
+ config PCI_MARVELL
+ 	bool
+ 
+-config SERIAL_RM9000
+-	bool
+-
+ config PNX8550
+ 	bool
+ 	select SOC_PNX8550
+@@ -875,12 +869,6 @@
+ config SERIAL_RM9000
+ 	bool
+ 
+-config GPI_RM9000
+-	bool
+-
+-config WDT_RM9000
+-	bool
+-
+ #
+ # Unfortunately not all GT64120 systems run the chip at the same clock.
+ # As the user for the clock rate and try to minimize the available options.
+@@ -1362,7 +1350,6 @@
+ 	depends on SYS_SUPPORTS_MULTITHREADING
+ 	select CPU_MIPSR2_IRQ_VI
+ 	select CPU_MIPSR2_IRQ_EI
+-	select CPU_MIPSR2_SRS
+ 	select MIPS_MT
+ 	select NR_CPUS_DEFAULT_2
+ 	select SMP
+@@ -1378,7 +1365,6 @@
+ 	depends on SYS_SUPPORTS_MULTITHREADING
+ 	select CPU_MIPSR2_IRQ_VI
+ 	select CPU_MIPSR2_IRQ_EI
+-	select CPU_MIPSR2_SRS
+ 	select MIPS_MT
+ 	select NR_CPUS_DEFAULT_8
+ 	select SMP
+@@ -1392,7 +1378,6 @@
+ 	depends on SYS_SUPPORTS_MULTITHREADING
+ 	select CPU_MIPSR2_IRQ_VI
+ 	select CPU_MIPSR2_IRQ_EI
+-	select CPU_MIPSR2_SRS
+ 	select MIPS_MT
+ 	help
+ 	  Includes a loader for loading an elf relocatable object
+@@ -1425,6 +1410,19 @@
+ 	  it off), but ensures that IPIs are handled promptly even under
+ 	  heavy I/O interrupt load.
+ 
++config MIPS_MT_SMTC_IM_BACKSTOP
++	bool "Use per-TC register bits as backstop for inhibited IM bits"
++	depends on MIPS_MT_SMTC
++	default y
++	help
++	  To support multiple TC microthreads acting as "CPUs" within
++	  a VPE, VPE-wide interrupt mask bits must be specially manipulated
++	  during interrupt handling. To support legacy drivers and interrupt
++	  controller management code, SMTC has a "backstop" to track and
++	  if necessary restore the interrupt mask. This has some performance
++	  impact on interrupt service overhead. Disable it only if you know
++	  what you are doing.
++
+ config MIPS_VPE_LOADER_TOM
+ 	bool "Load VPE program into memory hidden from linux"
+ 	depends on MIPS_VPE_LOADER
+@@ -1500,12 +1498,6 @@
+ config CPU_MIPSR2_IRQ_EI
+ 	bool
+ 
+-#
+-# Shadow registers are an R2 feature
+-#
+-config CPU_MIPSR2_SRS
+-	bool
+-
+ config CPU_HAS_SYNC
+ 	bool
+ 	depends on !CPU_R3000
+@@ -1669,7 +1661,7 @@
+ 	 Allows the configuration of the timer frequency.
+ 
+ 	config HZ_48
+-		bool "48 HZ" if SYS_SUPPORTS_48HZ
++		bool "48 HZ" if SYS_SUPPORTS_48HZ || SYS_SUPPORTS_ARBIT_HZ
+ 
+ 	config HZ_100
+ 		bool "100 HZ" if SYS_SUPPORTS_100HZ || SYS_SUPPORTS_ARBIT_HZ
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/cpu-probe.c linux_kernel_2.6.22.19-19/arch/mips/kernel/cpu-probe.c
+--- linux-2.6.22.19/arch/mips/kernel/cpu-probe.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/cpu-probe.c	2011-08-23 13:02:26.000000000 +0200
+@@ -75,6 +75,27 @@
+ 	local_irq_enable();
+ }
+ 
++/*
++ * The RM7000 variant has to handle erratum 38.  The workaround is to not
++ * have any pending stores when the WAIT instruction is executed.
++ */
++static void rm7k_wait_irqoff(void)
++{
++	local_irq_disable();
++	if (!need_resched())
++		__asm__(
++		"	.set	push					\n"
++		"	.set	mips3					\n"
++		"	.set	noat					\n"
++		"	mfc0	$1, $12					\n"
++		"	sync						\n"
++		"	mtc0	$1, $12		# stalls until W stage	\n"
++		"	wait						\n"
++		"	mtc0	$1, $12		# stalls until W stage	\n"
++		"	.set	pop					\n");
++	local_irq_enable();
++}
++
+ /* The Au1xxx wait is available only if using 32khz counter or
+  * external timer source, but specifically not CP0 Counter. */
+ int allow_au1k_wait;
+@@ -132,7 +153,6 @@
+ 	case CPU_R4700:
+ 	case CPU_R5000:
+ 	case CPU_NEVADA:
+-	case CPU_RM7000:
+ 	case CPU_4KC:
+ 	case CPU_4KEC:
+ 	case CPU_4KSC:
+@@ -142,6 +162,10 @@
+ 		cpu_wait = r4k_wait;
+ 		break;
+ 
++	case CPU_RM7000:
++		cpu_wait = rm7k_wait_irqoff;
++		break;
++
+ 	case CPU_24K:
+ 	case CPU_34K:
+ 		cpu_wait = r4k_wait;
+@@ -588,6 +612,8 @@
+ 		c->options |= MIPS_CPU_VEIC;
+ 	if (config3 & MIPS_CONF3_MT)
+ 	        c->ases |= MIPS_ASE_MIPSMT;
++	if (config3 & MIPS_CONF3_ULRI)
++		c->options |= MIPS_CPU_ULRI;
+ 
+ 	return config3 & MIPS_CONF_M;
+ }
+@@ -774,6 +800,11 @@
+ 				c->ases |= MIPS_ASE_MIPS3D;
+ 		}
+ 	}
++
++	if (cpu_has_mips_r2)
++		c->srsets = ((read_c0_srsctl() >> 26) & 0x0f) + 1;
++	else
++		c->srsets = 1;
+ }
+ 
+ __init void cpu_report(void)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/entry.S linux_kernel_2.6.22.19-19/arch/mips/kernel/entry.S
+--- linux-2.6.22.19/arch/mips/kernel/entry.S	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/entry.S	2008-02-26 10:54:25.000000000 +0100
+@@ -84,6 +84,7 @@
+ 	LONG_S	sp, TI_REGS($28)
+ 	jal	deferred_smtc_ipi
+ 	LONG_S	s0, TI_REGS($28)
++#ifdef CONFIG_MIPS_MT_SMTC_IM_BACKSTOP
+ /* Re-arm any temporarily masked interrupts not explicitly "acked" */
+ 	mfc0	v0, CP0_TCSTATUS
+ 	ori	v1, v0, TCSTATUS_IXMT
+@@ -110,6 +111,7 @@
+ 	_ehb
+ 	xor	t0, t0, t3
+ 	mtc0	t0, CP0_TCCONTEXT
++#endif /* CONFIG_MIPS_MT_SMTC_IM_BACKSTOP */
+ #endif /* CONFIG_MIPS_MT_SMTC */
+ 	.set	noat
+ 	RESTORE_TEMP
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/genex.S linux_kernel_2.6.22.19-19/arch/mips/kernel/genex.S
+--- linux-2.6.22.19/arch/mips/kernel/genex.S	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/genex.S	2008-02-26 10:54:25.000000000 +0100
+@@ -146,7 +146,7 @@
+ 	and	k0, ST0_IEP
+ 	bnez	k0, 1f
+ 
+-	mfc0	k0, EP0_EPC
++	mfc0	k0, CP0_EPC
+ 	.set	noreorder
+ 	j	k0
+ 	rfe
+@@ -243,9 +243,11 @@
+ 	 */
+ 	mfc0	t1, CP0_STATUS
+ 	and	t0, a0, t1
++#ifdef CONFIG_MIPS_MT_SMTC_IM_BACKSTOP
+ 	mfc0	t2, CP0_TCCONTEXT
+ 	or	t0, t0, t2
+ 	mtc0	t0, CP0_TCCONTEXT
++#endif /* CONFIG_MIPS_MT_SMTC_IM_BACKSTOP */
+ 	xor	t1, t1, t0
+ 	mtc0	t1, CP0_STATUS
+ 	_ehb
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/irq_cpu.c linux_kernel_2.6.22.19-19/arch/mips/kernel/irq_cpu.c
+--- linux-2.6.22.19/arch/mips/kernel/irq_cpu.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/irq_cpu.c	2008-02-26 10:54:25.000000000 +0100
+@@ -116,5 +116,5 @@
+ 
+ 	for (i = irq_base + 2; i < irq_base + 8; i++)
+ 		set_irq_chip_and_handler(i, &mips_cpu_irq_controller,
+-					 handle_level_irq);
++					 handle_percpu_irq);
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/irq-rm7000.c linux_kernel_2.6.22.19-19/arch/mips/kernel/irq-rm7000.c
+--- linux-2.6.22.19/arch/mips/kernel/irq-rm7000.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/irq-rm7000.c	2008-02-26 10:54:25.000000000 +0100
+@@ -33,6 +33,7 @@
+ 	.mask = mask_rm7k_irq,
+ 	.mask_ack = mask_rm7k_irq,
+ 	.unmask = unmask_rm7k_irq,
++	.eoi	= unmask_rm7k_irq
+ };
+ 
+ void __init rm7k_cpu_irq_init(void)
+@@ -44,5 +45,5 @@
+ 
+ 	for (i = base; i < base + 4; i++)
+ 		set_irq_chip_and_handler(i, &rm7k_irq_controller,
+-					 handle_level_irq);
++					 handle_percpu_irq);
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/irq-rm9000.c linux_kernel_2.6.22.19-19/arch/mips/kernel/irq-rm9000.c
+--- linux-2.6.22.19/arch/mips/kernel/irq-rm9000.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/irq-rm9000.c	2008-02-26 10:54:25.000000000 +0100
+@@ -75,6 +75,7 @@
+ 	.mask = mask_rm9k_irq,
+ 	.mask_ack = mask_rm9k_irq,
+ 	.unmask = unmask_rm9k_irq,
++	.eoi	= unmask_rm9k_irq
+ };
+ 
+ static struct irq_chip rm9k_perfcounter_irq = {
+@@ -104,5 +105,5 @@
+ 
+ 	rm9000_perfcount_irq = base + 1;
+ 	set_irq_chip_and_handler(rm9000_perfcount_irq, &rm9k_perfcounter_irq,
+-				 handle_level_irq);
++				 handle_percpu_irq);
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/proc.c linux_kernel_2.6.22.19-19/arch/mips/kernel/proc.c
+--- linux-2.6.22.19/arch/mips/kernel/proc.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/proc.c	2011-08-23 13:02:26.000000000 +0200
+@@ -131,6 +131,8 @@
+ 		      cpu_has_dsp ? " dsp" : "",
+ 		      cpu_has_mipsmt ? " mt" : ""
+ 		);
++	seq_printf(m, "shadow register sets\t: %d\n",
++		       cpu_data[n].srsets);
+ 
+ 	sprintf(fmt, "VCE%%c exceptions\t\t: %s\n",
+ 	        cpu_has_vce ? "%u" : "not available");
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/process.c linux_kernel_2.6.22.19-19/arch/mips/kernel/process.c
+--- linux-2.6.22.19/arch/mips/kernel/process.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/process.c	2008-02-26 10:54:25.000000000 +0100
+@@ -72,9 +72,8 @@
+ 	unsigned long status;
+ 
+ 	/* New thread loses kernel privileges. */
+-	status = regs->cp0_status & ~(ST0_CU0|ST0_CU1|KU_MASK);
++	status = regs->cp0_status & ~(ST0_CU0|ST0_CU1|ST0_FR|KU_MASK);
+ #ifdef CONFIG_64BIT
+-	status &= ~ST0_FR;
+ 	status |= (current->thread.mflags & MF_32BIT_REGS) ? 0 : ST0_FR;
+ #endif
+ 	status |= KU_USER;
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/ptrace.c linux_kernel_2.6.22.19-19/arch/mips/kernel/ptrace.c
+--- linux-2.6.22.19/arch/mips/kernel/ptrace.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/ptrace.c	2008-02-26 10:54:25.000000000 +0100
+@@ -20,11 +20,11 @@
+ #include <linux/mm.h>
+ #include <linux/errno.h>
+ #include <linux/ptrace.h>
+-#include <linux/audit.h>
+ #include <linux/smp.h>
+ #include <linux/user.h>
+ #include <linux/security.h>
+-#include <linux/signal.h>
++#include <linux/audit.h>
++#include <linux/seccomp.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/cpu.h>
+@@ -482,6 +482,9 @@
+  */
+ asmlinkage void do_syscall_trace(struct pt_regs *regs, int entryexit)
+ {
++	/* do the secure computing check first */
++	secure_computing(regs->orig_eax);
++
+ 	if (unlikely(current->audit_context) && entryexit)
+ 		audit_syscall_exit(AUDITSC_RESULT(regs->regs[2]),
+ 		                   regs->regs[2]);
+@@ -505,9 +509,14 @@
+ 		send_sig(current->exit_code, current, 1);
+ 		current->exit_code = 0;
+ 	}
+- out:
++
++out:
++	/* There is no ->orig_eax and that's quite intensional for now making
++	   this work will require some work in various other place before it's
++	   more than a placebo.  */
++
+ 	if (unlikely(current->audit_context) && !entryexit)
+-		audit_syscall_entry(audit_arch(), regs->regs[2],
++		audit_syscall_entry(audit_arch(), regs->orig_eax,
+ 				    regs->regs[4], regs->regs[5],
+ 				    regs->regs[6], regs->regs[7]);
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/scall64-n32.S linux_kernel_2.6.22.19-19/arch/mips/kernel/scall64-n32.S
+--- linux-2.6.22.19/arch/mips/kernel/scall64-n32.S	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/scall64-n32.S	2008-02-26 10:54:25.000000000 +0100
+@@ -293,7 +293,7 @@
+ 	PTR	sys_ni_syscall			/* 6170, was get_kernel_syms */
+ 	PTR	sys_ni_syscall			/* was query_module */
+ 	PTR	sys_quotactl
+-	PTR	sys_nfsservctl
++	PTR	compat_sys_nfsservctl
+ 	PTR	sys_ni_syscall			/* res. for getpmsg */
+ 	PTR	sys_ni_syscall			/* 6175  for putpmsg */
+ 	PTR	sys_ni_syscall			/* res. for afs_syscall */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/syscall.c linux_kernel_2.6.22.19-19/arch/mips/kernel/syscall.c
+--- linux-2.6.22.19/arch/mips/kernel/syscall.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/syscall.c	2008-02-26 10:54:25.000000000 +0100
+@@ -72,7 +72,14 @@
+ 
+ 	task_size = STACK_TOP;
+ 
++	if (len > task_size)
++		return -ENOMEM;
++
+ 	if (flags & MAP_FIXED) {
++		/* Even MAP_FIXED mappings must reside within task_size.  */
++		if (task_size - len < addr)
++			return -EINVAL;
++
+ 		/*
+ 		 * We do not accept a shared mapping if it would violate
+ 		 * cache aliasing constraints.
+@@ -82,8 +89,6 @@
+ 		return addr;
+ 	}
+ 
+-	if (len > task_size)
+-		return -ENOMEM;
+ 	do_color_align = 0;
+ 	if (filp || (flags & MAP_SHARED))
+ 		do_color_align = 1;
+@@ -272,9 +277,8 @@
+ 	struct thread_info *ti = task_thread_info(current);
+ 
+ 	ti->tp_value = addr;
+-
+-	/* If some future MIPS implementation has this register in hardware,
+-	 * we will need to update it here (and in context switches).  */
++	if (cpu_has_userlocal)
++		write_c0_userlocal(addr);
+ 
+ 	return 0;
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/traps.c linux_kernel_2.6.22.19-19/arch/mips/kernel/traps.c
+--- linux-2.6.22.19/arch/mips/kernel/traps.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/traps.c	2011-08-23 13:02:26.000000000 +0200
+@@ -1070,59 +1070,6 @@
+ 	return (void *)old_handler;
+ }
+ 
+-#ifdef CONFIG_CPU_MIPSR2_SRS
+-/*
+- * MIPSR2 shadow register set allocation
+- * FIXME: SMP...
+- */
+-
+-static struct shadow_registers {
+-	/*
+-	 * Number of shadow register sets supported
+-	 */
+-	unsigned long sr_supported;
+-	/*
+-	 * Bitmap of allocated shadow registers
+-	 */
+-	unsigned long sr_allocated;
+-} shadow_registers;
+-
+-static void mips_srs_init(void)
+-{
+-	shadow_registers.sr_supported = ((read_c0_srsctl() >> 26) & 0x0f) + 1;
+-	printk(KERN_INFO "%ld MIPSR2 register sets available\n",
+-	       shadow_registers.sr_supported);
+-	shadow_registers.sr_allocated = 1;	/* Set 0 used by kernel */
+-}
+-
+-int mips_srs_max(void)
+-{
+-	return shadow_registers.sr_supported;
+-}
+-
+-int mips_srs_alloc(void)
+-{
+-	struct shadow_registers *sr = &shadow_registers;
+-	int set;
+-
+-again:
+-	set = find_first_zero_bit(&sr->sr_allocated, sr->sr_supported);
+-	if (set >= sr->sr_supported)
+-		return -1;
+-
+-	if (test_and_set_bit(set, &sr->sr_allocated))
+-		goto again;
+-
+-	return set;
+-}
+-
+-void mips_srs_free(int set)
+-{
+-	struct shadow_registers *sr = &shadow_registers;
+-
+-	clear_bit(set, &sr->sr_allocated);
+-}
+-
+ static asmlinkage void do_default_vi(void)
+ {
+ 	show_regs(get_irq_regs());
+@@ -1133,6 +1080,7 @@
+ {
+ 	unsigned long handler;
+ 	unsigned long old_handler = vi_handlers[n];
++	int srssets = current_cpu_data.srsets;
+ 	u32 *w;
+ 	unsigned char *b;
+ 
+@@ -1148,7 +1096,7 @@
+ 
+ 	b = (unsigned char *)(ebase + 0x200 + n*VECTORSPACING);
+ 
+-	if (srs >= mips_srs_max())
++	if (srs >= srssets)
+ 		panic("Shadow register set %d not supported", srs);
+ 
+ 	if (cpu_has_veic) {
+@@ -1156,7 +1104,7 @@
+ 			board_bind_eic_interrupt (n, srs);
+ 	} else if (cpu_has_vint) {
+ 		/* SRSMap is only defined if shadow sets are implemented */
+-		if (mips_srs_max() > 1)
++		if (srssets > 1)
+ 			change_c0_srsmap (0xf << n*4, srs << n*4);
+ 	}
+ 
+@@ -1223,14 +1171,6 @@
+ 	return set_vi_srs_handler(n, addr, 0);
+ }
+ 
+-#else
+-
+-static inline void mips_srs_init(void)
+-{
+-}
+-
+-#endif /* CONFIG_CPU_MIPSR2_SRS */
+-
+ /*
+  * This is used by native signal handling
+  */
+@@ -1336,14 +1276,21 @@
+ #endif
+ 	if (current_cpu_data.isa_level == MIPS_CPU_ISA_IV)
+ 		status_set |= ST0_XX;
++	if (cpu_has_dsp)
++		status_set |= ST0_MX;
++
+ 	change_c0_status(ST0_CU|ST0_MX|ST0_RE|ST0_FR|ST0_BEV|ST0_TS|ST0_KX|ST0_SX|ST0_UX,
+ 			 status_set);
+ 
+-	if (cpu_has_dsp)
+-		set_c0_status(ST0_MX);
+-
+ #ifdef CONFIG_CPU_MIPSR2
+-	write_c0_hwrena (0x0000000f); /* Allow rdhwr to all registers */
++	if (cpu_has_mips_r2) {
++		unsigned int enable = 0x0000000f;
++
++		if (cpu_has_userlocal)
++			enable |= (1 << 29);
++
++		write_c0_hwrena(enable);
++	}
+ #endif
+ 
+ #ifdef CONFIG_MIPS_MT_SMTC
+@@ -1449,8 +1396,6 @@
+ 	else
+ 		ebase = CAC_BASE;
+ 
+-	mips_srs_init();
+-
+ 	per_cpu_trap_init();
+ 
+ 	/*
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/unaligned.c linux_kernel_2.6.22.19-19/arch/mips/kernel/unaligned.c
+--- linux-2.6.22.19/arch/mips/kernel/unaligned.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/unaligned.c	2011-08-23 13:02:26.000000000 +0200
+@@ -91,6 +91,9 @@
+ unsigned long unaligned_instructions;
+ #endif
+ 
++/* enable message to print unaligned access */
++//#define PRINT_UNALIGNED_ACCESS
++
+ static inline int emulate_load_store_insn(struct pt_regs *regs,
+ 	void __user *addr, unsigned int __user *pc,
+ 	unsigned long **regptr, unsigned long *newvalue)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/vmlinux.lds.S linux_kernel_2.6.22.19-19/arch/mips/kernel/vmlinux.lds.S
+--- linux-2.6.22.19/arch/mips/kernel/vmlinux.lds.S	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/vmlinux.lds.S	2011-08-23 13:02:26.000000000 +0200
+@@ -45,6 +45,8 @@
+   __dbe_table : { *(__dbe_table) }
+   __stop___dbe_table = .;
+ 
++  NOTES
++
+   RODATA
+ 
+   /* writeable */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/kernel/vpe.c linux_kernel_2.6.22.19-19/arch/mips/kernel/vpe.c
+--- linux-2.6.22.19/arch/mips/kernel/vpe.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/kernel/vpe.c	2008-02-26 10:54:25.000000000 +0100
+@@ -955,8 +955,18 @@
+ 
+   		}
+   	} else {
+-  		for (i = 0; i < hdr->e_shnum; i++) {
++		struct elf_phdr *phdr = (struct elf_phdr *) ((char *)hdr + hdr->e_phoff);
++
++		for (i = 0; i < hdr->e_phnum; i++) {
++			if (phdr->p_type != PT_LOAD)
++				continue;
+ 
++			memcpy((void *)phdr->p_vaddr, (char *)hdr + phdr->p_offset, phdr->p_filesz);
++			memset((void *)phdr->p_vaddr + phdr->p_filesz, 0, phdr->p_memsz - phdr->p_filesz);
++			phdr++;
++		}
++
++		for (i = 0; i < hdr->e_shnum; i++) {
+  			/* Internal symbols and strings. */
+  			if (sechdrs[i].sh_type == SHT_SYMTAB) {
+  				symindex = i;
+@@ -967,39 +977,6 @@
+  				   magic symbols */
+  				sechdrs[i].sh_addr = (size_t) hdr + sechdrs[i].sh_offset;
+  			}
+-
+- 			/* filter sections we dont want in the final image */
+- 			if (!(sechdrs[i].sh_flags & SHF_ALLOC) ||
+- 			    (sechdrs[i].sh_type == SHT_MIPS_REGINFO)) {
+- 				printk( KERN_DEBUG " ignoring section, "
+- 					"name %s type %x address 0x%x \n",
+- 					secstrings + sechdrs[i].sh_name,
+- 					sechdrs[i].sh_type, sechdrs[i].sh_addr);
+- 				continue;
+- 			}
+-
+-  			if (sechdrs[i].sh_addr < (unsigned int)v->load_addr) {
+- 				printk( KERN_WARNING "VPE loader: "
+- 					"fully linked image has invalid section, "
+- 					"name %s type %x address 0x%x, before load "
+- 					"address of 0x%x\n",
+- 					secstrings + sechdrs[i].sh_name,
+- 					sechdrs[i].sh_type, sechdrs[i].sh_addr,
+- 					(unsigned int)v->load_addr);
+-  				return -ENOEXEC;
+-  			}
+-
+- 			printk(KERN_DEBUG " copying section sh_name %s, sh_addr 0x%x "
+-			       "size 0x%x0 from x%p\n",
+-			       secstrings + sechdrs[i].sh_name, sechdrs[i].sh_addr,
+-			       sechdrs[i].sh_size, hdr + sechdrs[i].sh_offset);
+-
+-  			if (sechdrs[i].sh_type != SHT_NOBITS)
+-				memcpy((void *)sechdrs[i].sh_addr,
+-				       (char *)hdr + sechdrs[i].sh_offset,
+- 				       sechdrs[i].sh_size);
+-			else
+-				memset((void *)sechdrs[i].sh_addr, 0, sechdrs[i].sh_size);
+ 		}
+ 	}
+ 
+@@ -1053,6 +1030,7 @@
+ 	write_tc_c0_tcstatus(tmp);
+ 
+ 	write_tc_c0_tchalt(TCHALT_H);
++	mips_ihb();
+ 
+ 	/* bind it to anything other than VPE1 */
+ 	write_tc_c0_tcbind(read_tc_c0_tcbind() & ~TCBIND_CURVPE); // | TCBIND_CURVPE
+@@ -1285,9 +1263,12 @@
+ 	settc(t->index);
+ 	write_vpe_c0_vpeconf0(read_vpe_c0_vpeconf0() & ~VPECONF0_VPA);
+ 
+-	/* mark the TC unallocated and halt'ed */
+-	write_tc_c0_tcstatus(read_tc_c0_tcstatus() & ~TCSTATUS_A);
++	/* halt the TC */
+ 	write_tc_c0_tchalt(TCHALT_H);
++	mips_ihb();
++
++	/* mark the TC unallocated */
++	write_tc_c0_tcstatus(read_tc_c0_tcstatus() & ~TCSTATUS_A);
+ 
+ 	v->state = VPE_STATE_UNUSED;
+ 
+@@ -1469,14 +1450,16 @@
+ 				t->pvpe = get_vpe(0);	/* set the parent vpe */
+ 			}
+ 
++			/* halt the TC */
++			write_tc_c0_tchalt(TCHALT_H);
++			mips_ihb();
++
+ 			tmp = read_tc_c0_tcstatus();
+ 
+ 			/* mark not activated and not dynamically allocatable */
+ 			tmp &= ~(TCSTATUS_A | TCSTATUS_DA);
+ 			tmp |= TCSTATUS_IXMT;	/* interrupt exempt */
+ 			write_tc_c0_tcstatus(tmp);
+-
+-			write_tc_c0_tchalt(TCHALT_H);
+ 		}
+ 	}
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/lib-32/dump_tlb.c linux_kernel_2.6.22.19-19/arch/mips/lib-32/dump_tlb.c
+--- linux-2.6.22.19/arch/mips/lib-32/dump_tlb.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/lib-32/dump_tlb.c	2011-08-23 13:02:26.000000000 +0200
+@@ -40,8 +40,6 @@
+ 		return "256Mb";
+ #endif
+ 	}
+-
+-	return "unknown";
+ }
+ 
+ #define BARRIER()					\
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/lib-64/dump_tlb.c linux_kernel_2.6.22.19-19/arch/mips/lib-64/dump_tlb.c
+--- linux-2.6.22.19/arch/mips/lib-64/dump_tlb.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/lib-64/dump_tlb.c	2008-02-26 10:54:25.000000000 +0100
+@@ -31,8 +31,6 @@
+ 	case PM_256M:	return "256Mb";
+ #endif
+ 	}
+-
+-	return "unknown";
+ }
+ 
+ #define BARRIER()					\
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/Makefile linux_kernel_2.6.22.19-19/arch/mips/Makefile
+--- linux-2.6.22.19/arch/mips/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/Makefile	2011-08-23 13:02:26.000000000 +0200
+@@ -702,6 +702,16 @@
+ CLEAN_FILES += vmlinux.ecoff \
+ 	       vmlinux.srec
+ 
++archprepare:
++ifdef CONFIG_MIPS32_N32
++	@echo '  Checking missing-syscalls for N32'
++	$(Q)$(MAKE) $(build)=. missing-syscalls EXTRA_CFLAGS="-mabi=n32"
++endif
++ifdef CONFIG_MIPS32_O32
++	@echo '  Checking missing-syscalls for O32'
++	$(Q)$(MAKE) $(build)=. missing-syscalls EXTRA_CFLAGS="-mabi=32"
++endif
++
+ archclean:
+ 	@$(MAKE) $(clean)=arch/mips/boot
+ 	@$(MAKE) $(clean)=arch/mips/lasat
+@@ -709,25 +719,3 @@
+ CLEAN_FILES += vmlinux.32 \
+ 	       vmlinux.64 \
+ 	       vmlinux.ecoff
+-
+-quiet_cmd_syscalls_n32 = CALL-N32 $<
+-      cmd_syscalls_n32 = $(CONFIG_SHELL) $< $(CC) $(c_flags) -mabi=n32
+-
+-quiet_cmd_syscalls_o32 = CALL-O32 $<
+-      cmd_syscalls_o32 = $(CONFIG_SHELL) $< $(CC) $(c_flags) -mabi=32
+-
+-PHONY += missing-syscalls-n32 missing-syscalls-o32
+-
+-missing-syscalls-n32: scripts/checksyscalls.sh FORCE
+-	$(call cmd,syscalls_n32)
+-
+-missing-syscalls-o32: scripts/checksyscalls.sh FORCE
+-	$(call cmd,syscalls_o32)
+-
+-archprepare:
+-ifdef CONFIG_MIPS32_N32
+-	$(Q)$(MAKE) $(build)=arch/mips missing-syscalls-n32
+-endif
+-ifdef CONFIG_MIPS32_O32
+-	$(Q)$(MAKE) $(build)=arch/mips missing-syscalls-o32
+-endif
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mips-boards/generic/display.c linux_kernel_2.6.22.19-19/arch/mips/mips-boards/generic/display.c
+--- linux-2.6.22.19/arch/mips/mips-boards/generic/display.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mips-boards/generic/display.c	2008-02-26 10:54:25.000000000 +0100
+@@ -37,9 +37,9 @@
+ 
+ 	for (i = 0; i <= 14; i=i+2) {
+ 	         if (*str)
+-		         writel(*str++, display + i);
++		         __raw_writel(*str++, display + i);
+ 		 else
+-		         writel(' ', display + i);
++		         __raw_writel(' ', display + i);
+ 	}
+ }
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mips-boards/generic/reset.c linux_kernel_2.6.22.19-19/arch/mips/mips-boards/generic/reset.c
+--- linux-2.6.22.19/arch/mips/mips-boards/generic/reset.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mips-boards/generic/reset.c	2008-02-26 10:54:25.000000000 +0100
+@@ -39,16 +39,18 @@
+ 
+ static void mips_machine_restart(char *command)
+ {
+-	unsigned int __iomem *softres_reg = ioremap(SOFTRES_REG, sizeof(unsigned int));
++	unsigned int __iomem *softres_reg =
++		ioremap(SOFTRES_REG, sizeof(unsigned int));
+ 
+-	writew(GORESET, softres_reg);
++	__raw_writel(GORESET, softres_reg);
+ }
+ 
+ static void mips_machine_halt(void)
+ {
+-        unsigned int __iomem *softres_reg = ioremap(SOFTRES_REG, sizeof(unsigned int));
++	unsigned int __iomem *softres_reg =
++		ioremap(SOFTRES_REG, sizeof(unsigned int));
+ 
+-	writew(GORESET, softres_reg);
++	__raw_writel(GORESET, softres_reg);
+ }
+ 
+ #if defined(CONFIG_MIPS_ATLAS)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mips-boards/malta/malta_int.c linux_kernel_2.6.22.19-19/arch/mips/mips-boards/malta/malta_int.c
+--- linux-2.6.22.19/arch/mips/mips-boards/malta/malta_int.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mips-boards/malta/malta_int.c	2008-02-26 10:54:25.000000000 +0100
+@@ -256,7 +256,7 @@
+ 
+ 	if (irq == MIPSCPU_INT_I8259A)
+ 		malta_hw0_irqdispatch();
+-	else if (irq > 0)
++	else if (irq >= 0)
+ 		do_IRQ(MIPS_CPU_IRQ_BASE + irq);
+ 	else
+ 		spurious_interrupt();
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mips-boards/malta/malta_setup.c linux_kernel_2.6.22.19-19/arch/mips/mips-boards/malta/malta_setup.c
+--- linux-2.6.22.19/arch/mips/mips-boards/malta/malta_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mips-boards/malta/malta_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -150,7 +150,7 @@
+ 	/* Check PCI clock */
+ 	{
+ 		unsigned int __iomem *jmpr_p = (unsigned int *) ioremap(MALTA_JMPRS_REG, sizeof(unsigned int));
+-		int jmpr = (readw(jmpr_p) >> 2) & 0x07;
++		int jmpr = (__raw_readl(jmpr_p) >> 2) & 0x07;
+ 		static const int pciclocks[] __initdata = {
+ 			33, 20, 25, 30, 12, 16, 37, 10
+ 		};
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mm/cache.c linux_kernel_2.6.22.19-19/arch/mips/mm/cache.c
+--- linux-2.6.22.19/arch/mips/mm/cache.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mm/cache.c	2011-08-23 13:02:26.000000000 +0200
+@@ -91,12 +91,17 @@
+ 
+ void __flush_anon_page(struct page *page, unsigned long vmaddr)
+ {
+-	if (pages_do_alias((unsigned long)page_address(page), vmaddr)) {
++	unsigned long addr = (unsigned long) page_address(page);
++
++	if (pages_do_alias(addr, vmaddr)) {
++		if (page_mapped(page) && !Page_dcache_dirty(page)) {
+ 		void *kaddr;
+ 
+ 		kaddr = kmap_coherent(page, vmaddr);
+ 		flush_data_cache_page((unsigned long)kaddr);
+ 		kunmap_coherent();
++		} else
++			flush_data_cache_page(addr);
+ 	}
+ }
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mm/c-r4k.c linux_kernel_2.6.22.19-19/arch/mips/mm/c-r4k.c
+--- linux-2.6.22.19/arch/mips/mm/c-r4k.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mm/c-r4k.c	2011-08-23 13:02:26.000000000 +0200
+@@ -358,19 +358,22 @@
+ static inline void local_r4k_flush_cache_range(void * args)
+ {
+ 	struct vm_area_struct *vma = args;
++	int exec = vma->vm_flags & VM_EXEC;
+ 
+ 	if (!(cpu_context(smp_processor_id(), vma->vm_mm)))
+ 		return;
+ 
+ 	r4k_blast_dcache();
++	if (exec)
++		r4k_blast_icache();
+ }
+ 
+ static void r4k_flush_cache_range(struct vm_area_struct *vma,
+ 	unsigned long start, unsigned long end)
+ {
+-	if (!cpu_has_dc_aliases)
+-		return;
++	int exec = vma->vm_flags & VM_EXEC;
+ 
++	if (cpu_has_dc_aliases || (exec && !cpu_has_ic_fills_f_dc))
+ 	r4k_on_each_cpu(local_r4k_flush_cache_range, vma, 1, 1);
+ }
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mm/init.c linux_kernel_2.6.22.19-19/arch/mips/mm/init.c
+--- linux-2.6.22.19/arch/mips/mm/init.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mm/init.c	2011-08-23 13:02:26.000000000 +0200
+@@ -8,6 +8,7 @@
+  * Kevin D. Kissell, kevink@mips.com and Carsten Langgaard, carstenl@mips.com
+  * Copyright (C) 2000 MIPS Technologies, Inc.  All rights reserved.
+  */
++#include <linux/bug.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/signal.h>
+@@ -131,6 +132,8 @@
+ 	pte_t pte;
+ 	int tlbidx;
+ 
++	BUG_ON(Page_dcache_dirty(page));
++
+ 	inc_preempt_count();
+ 	idx = (addr >> PAGE_SHIFT) & (FIX_N_COLOURS - 1);
+ #ifdef CONFIG_MIPS_MT_SMTC
+@@ -207,7 +210,8 @@
+ 	void *vfrom, *vto;
+ 
+ 	vto = kmap_atomic(to, KM_USER1);
+-	if (cpu_has_dc_aliases) {
++	if (cpu_has_dc_aliases &&
++	    page_mapped(from) && !Page_dcache_dirty(from)) {
+ 		vfrom = kmap_coherent(from, vaddr);
+ 		copy_page(vto, vfrom);
+ 		kunmap_coherent();
+@@ -230,12 +234,16 @@
+ 	struct page *page, unsigned long vaddr, void *dst, const void *src,
+ 	unsigned long len)
+ {
+-	if (cpu_has_dc_aliases) {
++	if (cpu_has_dc_aliases &&
++	    page_mapped(page) && !Page_dcache_dirty(page)) {
+ 		void *vto = kmap_coherent(page, vaddr) + (vaddr & ~PAGE_MASK);
+ 		memcpy(vto, src, len);
+ 		kunmap_coherent();
+-	} else
++	} else {
+ 		memcpy(dst, src, len);
++		if (cpu_has_dc_aliases)
++			SetPageDcacheDirty(page);
++	}
+ 	if ((vma->vm_flags & VM_EXEC) && !cpu_has_ic_fills_f_dc)
+ 		flush_cache_page(vma, vaddr, page_to_pfn(page));
+ }
+@@ -246,13 +254,16 @@
+ 	struct page *page, unsigned long vaddr, void *dst, const void *src,
+ 	unsigned long len)
+ {
+-	if (cpu_has_dc_aliases) {
+-		void *vfrom =
+-			kmap_coherent(page, vaddr) + (vaddr & ~PAGE_MASK);
++	if (cpu_has_dc_aliases &&
++	    page_mapped(page) && !Page_dcache_dirty(page)) {
++		void *vfrom = kmap_coherent(page, vaddr) + (vaddr & ~PAGE_MASK);
+ 		memcpy(dst, vfrom, len);
+ 		kunmap_coherent();
+-	} else
++	} else {
+ 		memcpy(dst, src, len);
++		if (cpu_has_dc_aliases)
++			SetPageDcacheDirty(page);
++	}
+ }
+ 
+ EXPORT_SYMBOL(copy_from_user_page);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/mm/pg-r4k.c linux_kernel_2.6.22.19-19/arch/mips/mm/pg-r4k.c
+--- linux-2.6.22.19/arch/mips/mm/pg-r4k.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/mm/pg-r4k.c	2008-02-26 10:54:25.000000000 +0100
+@@ -209,7 +209,7 @@
+ 	}
+ 
+ 	if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())
+-		build_insn_word(0x3c01a000);	/* lui     $at, 0xa000  */
++		build_insn_word(0x8c200000);	/* lw      $zero, ($at) */
+ 
+ 	mi.c_format.opcode     = cache_op;
+ 	mi.c_format.rs         = 4;		/* $a0 */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/pci/fixup-tb0219.c linux_kernel_2.6.22.19-19/arch/mips/pci/fixup-tb0219.c
+--- linux-2.6.22.19/arch/mips/pci/fixup-tb0219.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/pci/fixup-tb0219.c	2008-02-26 10:54:25.000000000 +0100
+@@ -2,7 +2,7 @@
+  *  fixup-tb0219.c, The TANBAC TB0219 specific PCI fixups.
+  *
+  *  Copyright (C) 2003  Megasolution Inc. <matsu@megasolution.jp>
+- *  Copyright (C) 2004  Yoichi Yuasa <yoichi_yuasa@tripeaks.co.jp>
++ *  Copyright (C) 2004-2005  Yoichi Yuasa <yoichi_yuasa@tripeaks.co.jp>
+  *
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/pci/ops-mace.c linux_kernel_2.6.22.19-19/arch/mips/pci/ops-mace.c
+--- linux-2.6.22.19/arch/mips/pci/ops-mace.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/pci/ops-mace.c	2008-02-26 10:54:25.000000000 +0100
+@@ -29,22 +29,20 @@
+  * 4  N/C
+  */
+ 
+-#define chkslot(_bus,_devfn)					\
+-do {							        \
+-	if ((_bus)->number > 0 || PCI_SLOT (_devfn) < 1	\
+-	    || PCI_SLOT (_devfn) > 3)			        \
+-		return PCIBIOS_DEVICE_NOT_FOUND;		\
+-} while (0)
++static inline int mkaddr(struct pci_bus *bus, unsigned int devfn,
++	unsigned int reg)
++{
++	return ((bus->number & 0xff) << 16) |
++		(devfn & 0xff) << 8) |
++		(reg & 0xfc);
++}
+ 
+-#define mkaddr(_devfn, _reg) \
+-((((_devfn) & 0xffUL) << 8) | ((_reg) & 0xfcUL))
+ 
+ static int
+ mace_pci_read_config(struct pci_bus *bus, unsigned int devfn,
+ 		     int reg, int size, u32 *val)
+ {
+-	chkslot(bus, devfn);
+-	mace->pci.config_addr = mkaddr(devfn, reg);
++	mace->pci.config_addr = mkaddr(bus, devfn, reg);
+ 	switch (size) {
+ 	case 1:
+ 		*val = mace->pci.config_data.b[(reg & 3) ^ 3];
+@@ -66,8 +64,7 @@
+ mace_pci_write_config(struct pci_bus *bus, unsigned int devfn,
+ 		      int reg, int size, u32 val)
+ {
+-	chkslot(bus, devfn);
+-	mace->pci.config_addr = mkaddr(devfn, reg);
++	mace->pci.config_addr = mkaddr(bus, devfn, reg);
+ 	switch (size) {
+ 	case 1:
+ 		mace->pci.config_data.b[(reg & 3) ^ 3] = val;
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/pci/pci-bcm1480.c linux_kernel_2.6.22.19-19/arch/mips/pci/pci-bcm1480.c
+--- linux-2.6.22.19/arch/mips/pci/pci-bcm1480.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/pci/pci-bcm1480.c	2008-02-26 10:54:25.000000000 +0100
+@@ -76,7 +76,10 @@
+ 
+ int pcibios_map_irq(struct pci_dev *dev, u8 slot, u8 pin)
+ {
+-	return dev->irq;
++	if (pin == 0)
++		return -1;
++
++	return K_BCM1480_INT_PCI_INTA - 1 + pin;
+ }
+ 
+ /* Do platform specific device initialization at pci_enable_device() time */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/pci/pci.c linux_kernel_2.6.22.19-19/arch/mips/pci/pci.c
+--- linux-2.6.22.19/arch/mips/pci/pci.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/pci/pci.c	2011-08-23 13:02:26.000000000 +0200
+@@ -176,6 +176,11 @@
+ 			continue;
+ 
+ 		r = &dev->resource[idx];
++		if (!(r->flags & (IORESOURCE_IO | IORESOURCE_MEM)))
++			continue;
++		if ((idx == PCI_ROM_RESOURCE) &&
++				(!(r->flags & IORESOURCE_ROM_ENABLE)))
++			continue;
+ 		if (!r->start && r->end) {
+ 			printk(KERN_ERR "PCI: Device %s not available because of resource collisions\n", pci_name(dev));
+ 			return -EINVAL;
+@@ -185,8 +190,6 @@
+ 		if (r->flags & IORESOURCE_MEM)
+ 			cmd |= PCI_COMMAND_MEMORY;
+ 	}
+-	if (dev->resource[PCI_ROM_RESOURCE].start)
+-		cmd |= PCI_COMMAND_MEMORY;
+ 	if (cmd != old_cmd) {
+ 		printk("PCI: Enabling device %s (%04x -> %04x)\n", pci_name(dev), old_cmd, cmd);
+ 		pci_write_config_word(dev, PCI_COMMAND, cmd);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/qemu/Makefile linux_kernel_2.6.22.19-19/arch/mips/qemu/Makefile
+--- linux-2.6.22.19/arch/mips/qemu/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/qemu/Makefile	2008-02-26 10:54:25.000000000 +0100
+@@ -4,4 +4,5 @@
+ 
+ obj-y		= q-firmware.o q-irq.o q-mem.o q-setup.o q-reset.o
+ 
++obj-$(CONFIG_VT) += q-vga.o
+ obj-$(CONFIG_SMP) += q-smp.o
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/qemu/q-setup.c linux_kernel_2.6.22.19-19/arch/mips/qemu/q-setup.c
+--- linux-2.6.22.19/arch/mips/qemu/q-setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/qemu/q-setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -2,6 +2,7 @@
+ #include <asm/io.h>
+ #include <asm/time.h>
+ 
++extern void qvga_init(void);
+ extern void qemu_reboot_setup(void);
+ 
+ #define QEMU_PORT_BASE 0xb4000000
+@@ -23,5 +24,9 @@
+ void __init plat_mem_setup(void)
+ {
+ 	set_io_port_base(QEMU_PORT_BASE);
++#ifdef CONFIG_VT
++	qvga_init();
++#endif
++
+ 	qemu_reboot_setup();
+ }
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/sgi-ip22/ip22-platform.c linux_kernel_2.6.22.19-19/arch/mips/sgi-ip22/ip22-platform.c
+--- linux-2.6.22.19/arch/mips/sgi-ip22/ip22-platform.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/sgi-ip22/ip22-platform.c	2008-02-26 10:54:25.000000000 +0100
+@@ -150,8 +150,8 @@
+ 		return res;
+ 
+ 	/* Second HPC is missing? */
+-	if (ip22_is_fullhouse() ||
+-	    !get_dbe(tmp, (unsigned int *)&hpc3c1->pbdma[1]))
++	if (!ip22_is_fullhouse() ||
++	    get_dbe(tmp, (unsigned int *)&hpc3c1->pbdma[1]))
+ 		return 0;
+ 
+ 	sgimc->giopar |= SGIMC_GIOPAR_MASTEREXP1 | SGIMC_GIOPAR_EXP164 |
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/sgi-ip22/ip22-time.c linux_kernel_2.6.22.19-19/arch/mips/sgi-ip22/ip22-time.c
+--- linux-2.6.22.19/arch/mips/sgi-ip22/ip22-time.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/sgi-ip22/ip22-time.c	2008-02-26 10:54:25.000000000 +0100
+@@ -114,8 +114,8 @@
+ 	} while (msb);
+ 
+ 	/* Stop the counter. */
+-	writeb(sgint->tcword, (SGINT_TCWORD_CNT2 | SGINT_TCWORD_CALL |
+-			       SGINT_TCWORD_MSWST));
++	writeb(SGINT_TCWORD_CNT2 | SGINT_TCWORD_CALL | SGINT_TCWORD_MSWST,
++	       &sgint->tcword);
+ 	/*
+ 	 * Return the difference, this is how far the r4k counter increments
+ 	 * for every 1/HZ seconds. We round off the nearest 1 MHz of master
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/tx4927/toshiba_rbtx4927/toshiba_rbtx4927_setup.c linux_kernel_2.6.22.19-19/arch/mips/tx4927/toshiba_rbtx4927/toshiba_rbtx4927_setup.c
+--- linux-2.6.22.19/arch/mips/tx4927/toshiba_rbtx4927/toshiba_rbtx4927_setup.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/tx4927/toshiba_rbtx4927/toshiba_rbtx4927_setup.c	2008-02-26 10:54:25.000000000 +0100
+@@ -1039,7 +1039,7 @@
+ 
+ static int __init toshiba_rbtx4927_rtc_init(void)
+ {
+-	struct resource res = {
++	static struct resource __initdata res = {
+ 		.start	= 0x1c010000,
+ 		.end	= 0x1c010000 + 0x800 - 1,
+ 		.flags	= IORESOURCE_MEM,
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/arch/mips/vr41xx/common/Makefile linux_kernel_2.6.22.19-19/arch/mips/vr41xx/common/Makefile
+--- linux-2.6.22.19/arch/mips/vr41xx/common/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/arch/mips/vr41xx/common/Makefile	2008-02-26 10:54:25.000000000 +0100
+@@ -2,4 +2,4 @@
+ # Makefile for common code of the NEC VR4100 series.
+ #
+ 
+-obj-y	+= bcu.o cmu.o icu.o init.o irq.o pmu.o type.o
++obj-y	+= bcu.o cmu.o giu.o icu.o init.o irq.o pmu.o rtc.o siu.o type.o
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/char/Kconfig linux_kernel_2.6.22.19-19/drivers/char/Kconfig
+--- linux-2.6.22.19/drivers/char/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/char/Kconfig	2011-08-23 13:02:26.000000000 +0200
+@@ -374,19 +374,17 @@
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called istallion.
+ 
+-config AU1000_UART
+-	bool "Enable Au1000 UART Support"
+-	depends on SERIAL_NONSTANDARD && MIPS
+-	help
+-	  If you have an Alchemy AU1000 processor (MIPS based) and you want
+-	  to use serial ports, say Y.  Otherwise, say N.
++config AU1X00_GPIO
++	tristate "Alchemy Au1000 GPIO device support"
++	depends on MIPS && SOC_AU1X00
+ 
+-config AU1000_SERIAL_CONSOLE
+-	bool "Enable Au1000 serial console"
+-	depends on AU1000_UART
+-	help
+-	  If you have an Alchemy AU1000 processor (MIPS based) and you want
+-	  to use a console on a serial port, say Y.  Otherwise, say N.
++config SIBYTE_SB1250_DUART
++	bool "Support for BCM1xxx onchip DUART"
++	depends on MIPS && SIBYTE_SB1xxx_SOC=y
++
++config SIBYTE_SB1250_DUART_CONSOLE
++	bool "Console on BCM1xxx DUART"
++	depends on SIBYTE_SB1250_DUART
+ 
+ config SERIAL_DEC
+ 	bool "DECstation serial support"
+@@ -461,6 +459,26 @@
+ 
+ source "drivers/serial/Kconfig"
+ 
++config WD_LED_RESET
++       tristate "WD TVDock LEDs and Reset button support" 
++       default n
++       help
++         Control LEDs and detech Reset botton of Western Digital TVDock platform
++ 
++config TANGOX_IR
++       tristate "SMP86xx IR remote support" 
++       depends on TANGOX
++       default m
++       help
++         Support Infra-Red remote controller interface for SMP86xx.
++
++config IR_HOLD_KEY
++       bool "SMP86xx IR remote support hold key"
++       depends on TANGOX_IR
++       default n
++       help
++         Support hold key for SMP86xx ir.
++
+ config UNIX98_PTYS
+ 	bool "Unix98 PTY support" if EMBEDDED
+ 	default y
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/char/Makefile linux_kernel_2.6.22.19-19/drivers/char/Makefile
+--- linux-2.6.22.19/drivers/char/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/char/Makefile	2011-08-23 13:02:26.000000000 +0200
+@@ -32,6 +32,7 @@
+ obj-$(CONFIG_ATARI_DSP56K)	+= dsp56k.o
+ obj-$(CONFIG_MOXA_SMARTIO)	+= mxser.o
+ obj-$(CONFIG_MOXA_SMARTIO_NEW)	+= mxser_new.o
++obj-$(CONFIG_SIBYTE_SB1250_DUART) += sb1250_duart.o
+ obj-$(CONFIG_COMPUTONE)		+= ip2/
+ obj-$(CONFIG_RISCOM8)		+= riscom8.o
+ obj-$(CONFIG_ISI)		+= isicom.o
+@@ -55,6 +56,7 @@
+ obj-$(CONFIG_VIOTAPE)		+= viotape.o
+ obj-$(CONFIG_HVCS)		+= hvcs.o
+ obj-$(CONFIG_SGI_MBCS)		+= mbcs.o
++obj-$(CONFIG_SERIAL_DEC)	+= decserial.o
+ obj-$(CONFIG_BRIQ_PANEL)	+= briq_panel.o
+ 
+ obj-$(CONFIG_PRINTER)		+= lp.o
+@@ -83,6 +85,7 @@
+ obj-$(CONFIG_DS1620)		+= ds1620.o
+ obj-$(CONFIG_HW_RANDOM)		+= hw_random/
+ obj-$(CONFIG_COBALT_LCD)	+= lcd.o
++obj-$(CONFIG_AU1000_GPIO)	+= au1000_gpio.o
+ obj-$(CONFIG_PPDEV)		+= ppdev.o
+ obj-$(CONFIG_NWBUTTON)		+= nwbutton.o
+ obj-$(CONFIG_NWFLASH)		+= nwflash.o
+@@ -93,6 +96,9 @@
+ obj-$(CONFIG_GPIO_VR41XX)	+= vr41xx_giu.o
+ obj-$(CONFIG_GPIO_TB0219)	+= tb0219.o
+ obj-$(CONFIG_TELCLOCK)		+= tlclk.o
++obj-$(CONFIG_TANGOX_IR)		+= irkernel.o
++obj-$(CONFIG_WD_LED_RESET)	+= wd_led_rst.o
++obj-$(CONFIG_TANGOX_FIP) 	+= fipkernel.o
+ 
+ obj-$(CONFIG_WATCHDOG)		+= watchdog/
+ obj-$(CONFIG_MWAVE)		+= mwave/
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/char/vr41xx_giu.c linux_kernel_2.6.22.19-19/drivers/char/vr41xx_giu.c
+--- linux-2.6.22.19/drivers/char/vr41xx_giu.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/char/vr41xx_giu.c	2008-02-26 10:54:25.000000000 +0100
+@@ -19,18 +19,17 @@
+  *  along with this program; if not, write to the Free Software
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
+-#include <linux/platform_device.h>
+ #include <linux/errno.h>
+ #include <linux/fs.h>
+ #include <linux/init.h>
+-#include <linux/irq.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+-#include <asm/cpu.h>
+ #include <asm/io.h>
+ #include <asm/vr41xx/giu.h>
+ #include <asm/vr41xx/irq.h>
+@@ -44,18 +43,6 @@
+ module_param(major, int, 0);
+ MODULE_PARM_DESC(major, "Major device number");
+ 
+-#define GIU_TYPE1_START		0x0b000100UL
+-#define GIU_TYPE1_SIZE		0x20UL
+-
+-#define GIU_TYPE2_START		0x0f000140UL
+-#define GIU_TYPE2_SIZE		0x20UL
+-
+-#define GIU_TYPE3_START		0x0f000140UL
+-#define GIU_TYPE3_SIZE		0x28UL
+-
+-#define GIU_PULLUPDOWN_START	0x0b0002e0UL
+-#define GIU_PULLUPDOWN_SIZE	0x04UL
+-
+ #define GIUIOSELL	0x00
+ #define GIUIOSELH	0x02
+ #define GIUPIODL	0x04
+@@ -89,8 +76,6 @@
+ #define GPIO_HAS_INTERRUPT_EDGE_SELECT	0x0100
+ 
+ static spinlock_t giu_lock;
+-static struct resource *giu_resource1;
+-static struct resource *giu_resource2;
+ static unsigned long giu_flags;
+ static unsigned int giu_nr_pins;
+ 
+@@ -234,7 +219,7 @@
+ 				giu_set(GIUINTHTSELL, mask);
+ 			else
+ 				giu_clear(GIUINTHTSELL, mask);
+-			if (current_cpu_data.cputype == CPU_VR4133) {
++			if (giu_flags & GPIO_HAS_INTERRUPT_EDGE_SELECT) {
+ 				switch (trigger) {
+ 				case IRQ_TRIGGER_EDGE_FALLING:
+ 					giu_set(GIUFEDGEINHL, mask);
+@@ -269,7 +254,7 @@
+ 				giu_set(GIUINTHTSELH, mask);
+ 			else
+ 				giu_clear(GIUINTHTSELH, mask);
+-			if (current_cpu_data.cputype == CPU_VR4133) {
++			if (giu_flags & GPIO_HAS_INTERRUPT_EDGE_SELECT) {
+ 				switch (trigger) {
+ 				case IRQ_TRIGGER_EDGE_FALLING:
+ 					giu_set(GIUFEDGEINHH, mask);
+@@ -596,61 +575,40 @@
+ 
+ static int __devinit giu_probe(struct platform_device *dev)
+ {
+-	unsigned long start, size, flags = 0;
+-	unsigned int nr_pins = 0, trigger, i, pin;
+-	struct resource *res1, *res2 = NULL;
+-	void *base;
++	struct resource *res;
++	unsigned int trigger, i, pin;
+ 	struct irq_chip *chip;
+-	int retval;
++	int irq, retval;
+ 
+-	switch (current_cpu_data.cputype) {
+-	case CPU_VR4111:
+-	case CPU_VR4121:
+-		start = GIU_TYPE1_START;
+-		size = GIU_TYPE1_SIZE;
+-		flags = GPIO_HAS_PULLUPDOWN_IO;
+-		nr_pins = 50;
++	switch (dev->id) {
++	case GPIO_50PINS_PULLUPDOWN:
++		giu_flags = GPIO_HAS_PULLUPDOWN_IO;
++		giu_nr_pins = 50;
+ 		break;
+-	case CPU_VR4122:
+-	case CPU_VR4131:
+-		start = GIU_TYPE2_START;
+-		size = GIU_TYPE2_SIZE;
+-		nr_pins = 36;
++	case GPIO_36PINS:
++		giu_nr_pins = 36;
+ 		break;
+-	case CPU_VR4133:
+-		start = GIU_TYPE3_START;
+-		size = GIU_TYPE3_SIZE;
+-		flags = GPIO_HAS_INTERRUPT_EDGE_SELECT;
+-		nr_pins = 48;
++	case GPIO_48PINS_EDGE_SELECT:
++		giu_flags = GPIO_HAS_INTERRUPT_EDGE_SELECT;
++		giu_nr_pins = 48;
+ 		break;
+ 	default:
++		printk(KERN_ERR "GIU: unknown ID %d\n", dev->id);
+ 		return -ENODEV;
+ 	}
+ 
+-	res1 = request_mem_region(start, size, "GIU");
+-	if (res1 == NULL)
++	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
++	if (!res)
+ 		return -EBUSY;
+ 
+-	base = ioremap(start, size);
+-	if (base == NULL) {
+-		release_resource(res1);
++	giu_base = ioremap(res->start, res->end - res->start + 1);
++	if (!giu_base)
+ 		return -ENOMEM;
+-	}
+-
+-	if (flags & GPIO_HAS_PULLUPDOWN_IO) {
+-		res2 = request_mem_region(GIU_PULLUPDOWN_START, GIU_PULLUPDOWN_SIZE, "GIU");
+-		if (res2 == NULL) {
+-			iounmap(base);
+-			release_resource(res1);
+-			return -EBUSY;
+-		}
+-	}
+ 
+ 	retval = register_chrdev(major, "GIU", &gpio_fops);
+ 	if (retval < 0) {
+-		iounmap(base);
+-		release_resource(res1);
+-		release_resource(res2);
++		iounmap(giu_base);
++		giu_base = NULL;
+ 		return retval;
+ 	}
+ 
+@@ -660,11 +618,6 @@
+ 	}
+ 
+ 	spin_lock_init(&giu_lock);
+-	giu_base = base;
+-	giu_resource1 = res1;
+-	giu_resource2 = res2;
+-	giu_flags = flags;
+-	giu_nr_pins = nr_pins;
+ 
+ 	giu_write(GIUINTENL, 0);
+ 	giu_write(GIUINTENH, 0);
+@@ -685,22 +638,23 @@
+ 
+ 	}
+ 
+-	return cascade_irq(GIUINT_IRQ, giu_get_irq);
++	irq = platform_get_irq(dev, 0);
++	if (irq < 0 || irq >= NR_IRQS)
++		return -EBUSY;
++
++	return cascade_irq(irq, giu_get_irq);
+ }
+ 
+ static int __devexit giu_remove(struct platform_device *dev)
+ {
++	if (giu_base) {
+ 	iounmap(giu_base);
+-
+-	release_resource(giu_resource1);
+-	if (giu_flags & GPIO_HAS_PULLUPDOWN_IO)
+-		release_resource(giu_resource2);
++		giu_base = NULL;
++	}
+ 
+ 	return 0;
+ }
+ 
+-static struct platform_device *giu_platform_device;
+-
+ static struct platform_driver giu_device_driver = {
+ 	.probe		= giu_probe,
+ 	.remove		= __devexit_p(giu_remove),
+@@ -712,30 +666,12 @@
+ 
+ static int __init vr41xx_giu_init(void)
+ {
+-	int retval;
+-
+-	giu_platform_device = platform_device_alloc("GIU", -1);
+-	if (!giu_platform_device)
+-		return -ENOMEM;
+-
+-	retval = platform_device_add(giu_platform_device);
+-	if (retval < 0) {
+-		platform_device_put(giu_platform_device);
+-		return retval;
+-	}
+-
+-	retval = platform_driver_register(&giu_device_driver);
+-	if (retval < 0)
+-		platform_device_unregister(giu_platform_device);
+-
+-	return retval;
++	return platform_driver_register(&giu_device_driver);
+ }
+ 
+ static void __exit vr41xx_giu_exit(void)
+ {
+ 	platform_driver_unregister(&giu_device_driver);
+-
+-	platform_device_unregister(giu_platform_device);
+ }
+ 
+ module_init(vr41xx_giu_init);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/ide/mips/Makefile linux_kernel_2.6.22.19-19/drivers/ide/mips/Makefile
+--- linux-2.6.22.19/drivers/ide/mips/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/ide/mips/Makefile	2011-08-23 13:02:26.000000000 +0200
+@@ -1,4 +1,4 @@
+ obj-$(CONFIG_BLK_DEV_IDE_SWARM)		+= swarm.o
+ obj-$(CONFIG_BLK_DEV_IDE_AU1XXX)	+= au1xxx-ide.o
+ 
+-EXTRA_CFLAGS    := -Idrivers/ide
++CFLAGS_au1xxx-ide.o := -Idrivers/ide
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/mtd/devices/docprobe.c linux_kernel_2.6.22.19-19/drivers/mtd/devices/docprobe.c
+--- linux-2.6.22.19/drivers/mtd/devices/docprobe.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/mtd/devices/docprobe.c	2008-02-26 10:54:25.000000000 +0100
+@@ -86,7 +86,7 @@
+         0xff000000,
+ #elif defined(CONFIG_MOMENCO_OCELOT_G) || defined (CONFIG_MOMENCO_OCELOT_C)
+         0xff000000,
+-##else
++#else
+ #warning Unknown architecture for DiskOnChip. No default probe locations defined
+ #endif
+ 	0xffffffff };
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/mtd/maps/lasat.c linux_kernel_2.6.22.19-19/drivers/mtd/maps/lasat.c
+--- linux-2.6.22.19/drivers/mtd/maps/lasat.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/mtd/maps/lasat.c	2008-02-26 10:54:25.000000000 +0100
+@@ -7,7 +7,7 @@
+  * modify it under the terms of the GNU General Public License version
+  * 2 as published by the Free Software Foundation.
+  *
+- * $Id: lasat.c,v 1.9 2004/11/04 13:24:15 gleixner Exp $
++ * $Id: lasat.c,v 1.7 2004/07/12 21:59:44 dwmw2 Exp $
+  *
+  */
+ 
+@@ -49,7 +49,7 @@
+ 	ENABLE_VPP((&lasat_map));
+ 
+ 	lasat_map.phys = lasat_flash_partition_start(LASAT_MTD_BOOTLOADER);
+-	lasat_map.virt = ioremap_nocache(
++	lasat_map.virt = (unsigned long)ioremap_nocache(
+ 		        lasat_map.phys, lasat_board_info.li_flash_size);
+ 	lasat_map.size = lasat_board_info.li_flash_size;
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/net/ioc3-eth.c linux_kernel_2.6.22.19-19/drivers/net/ioc3-eth.c
+--- linux-2.6.22.19/drivers/net/ioc3-eth.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/net/ioc3-eth.c	2008-02-26 10:54:25.000000000 +0100
+@@ -5,7 +5,7 @@
+  *
+  * Driver for SGI's IOC3 based Ethernet cards as found in the PCI card.
+  *
+- * Copyright (C) 1999, 2000, 2001, 2003 Ralf Baechle
++ * Copyright (C) 1999, 2000, 01, 03, 06 Ralf Baechle
+  * Copyright (C) 1995, 1999, 2000, 2001 by Silicon Graphics, Inc.
+  *
+  * References:
+@@ -61,12 +61,7 @@
+ #include <asm/pgtable.h>
+ #include <asm/uaccess.h>
+ #include <asm/sn/types.h>
+-#include <asm/sn/sn0/addrs.h>
+-#include <asm/sn/sn0/hubni.h>
+-#include <asm/sn/sn0/hubio.h>
+-#include <asm/sn/klconfig.h>
+ #include <asm/sn/ioc3.h>
+-#include <asm/sn/sn0/ip27.h>
+ #include <asm/pci/bridge.h>
+ 
+ /*
+@@ -94,6 +89,9 @@
+ 	u32 emcr, ehar_h, ehar_l;
+ 	spinlock_t ioc3_lock;
+ 	struct mii_if_info mii;
++	unsigned long flags;
++#define IOC3_FLAG_RX_CHECKSUMS	1
++
+ 	struct pci_dev *pdev;
+ 
+ 	/* Members used by autonegotiation  */
+@@ -521,8 +519,6 @@
+ 	return &ip->stats;
+ }
+ 
+-#ifdef CONFIG_SGI_IOC3_ETH_HW_RX_CSUM
+-
+ static void ioc3_tcpudp_checksum(struct sk_buff *skb, uint32_t hwsum, int len)
+ {
+ 	struct ethhdr *eh = eth_hdr(skb);
+@@ -590,7 +586,6 @@
+ 	if (csum == 0xffff)
+ 		skb->ip_summed = CHECKSUM_UNNECESSARY;
+ }
+-#endif /* CONFIG_SGI_IOC3_ETH_HW_RX_CSUM */
+ 
+ static inline void ioc3_rx(struct ioc3_private *ip)
+ {
+@@ -625,9 +620,9 @@
+ 				goto next;
+ 			}
+ 
+-#ifdef CONFIG_SGI_IOC3_ETH_HW_RX_CSUM
+-			ioc3_tcpudp_checksum(skb, w0 & ERXBUF_IPCKSUM_MASK,len);
+-#endif
++			if (likely(ip->flags & IOC3_FLAG_RX_CHECKSUMS))
++				ioc3_tcpudp_checksum(skb,
++					w0 & ERXBUF_IPCKSUM_MASK, len);
+ 
+ 			netif_rx(skb);
+ 
+@@ -1291,9 +1286,7 @@
+ 	dev->set_multicast_list	= ioc3_set_multicast_list;
+ 	dev->set_mac_address	= ioc3_set_mac_address;
+ 	dev->ethtool_ops	= &ioc3_ethtool_ops;
+-#ifdef CONFIG_SGI_IOC3_ETH_HW_TX_CSUM
+ 	dev->features		= NETIF_F_IP_CSUM;
+-#endif
+ 
+ 	sw_physid1 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID1);
+ 	sw_physid2 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID2);
+@@ -1383,7 +1376,6 @@
+ 	uint32_t w0 = 0;
+ 	int produce;
+ 
+-#ifdef CONFIG_SGI_IOC3_ETH_HW_TX_CSUM
+ 	/*
+ 	 * IOC3 has a fairly simple minded checksumming hardware which simply
+ 	 * adds up the 1's complement checksum for the entire packet and
+@@ -1431,7 +1423,6 @@
+ 
+ 		w0 = ETXD_DOCHECKSUM | (csoff << ETXD_CHKOFF_SHIFT);
+ 	}
+-#endif /* CONFIG_SGI_IOC3_ETH_HW_TX_CSUM */
+ 
+ 	spin_lock_irq(&ip->ioc3_lock);
+ 
+@@ -1586,12 +1577,37 @@
+ 	return rc;
+ }
+ 
++static u32 ioc3_get_rx_csum(struct net_device *dev)
++{
++	struct ioc3_private *ip = netdev_priv(dev);
++
++	return ip->flags & IOC3_FLAG_RX_CHECKSUMS;
++}
++
++static int ioc3_set_rx_csum(struct net_device *dev, u32 data)
++{
++	struct ioc3_private *ip = netdev_priv(dev);
++
++	spin_lock_bh(&ip->ioc3_lock);
++	if (data)
++		ip->flags |= IOC3_FLAG_RX_CHECKSUMS;
++	else
++		ip->flags &= ~IOC3_FLAG_RX_CHECKSUMS;
++	spin_unlock_bh(&ip->ioc3_lock);
++
++	return 0;
++}
++
+ static const struct ethtool_ops ioc3_ethtool_ops = {
+ 	.get_drvinfo		= ioc3_get_drvinfo,
+ 	.get_settings		= ioc3_get_settings,
+ 	.set_settings		= ioc3_set_settings,
+ 	.nway_reset		= ioc3_nway_reset,
+ 	.get_link		= ioc3_get_link,
++	.get_rx_csum		= ioc3_get_rx_csum,
++	.set_rx_csum		= ioc3_set_rx_csum,
++	.get_tx_csum		= ethtool_op_get_tx_csum,
++	.set_tx_csum		= ethtool_op_set_tx_csum
+ };
+ 
+ static int ioc3_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/net/Kconfig linux_kernel_2.6.22.19-19/drivers/net/Kconfig
+--- linux-2.6.22.19/drivers/net/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/net/Kconfig	2011-08-23 13:02:26.000000000 +0200
+@@ -442,6 +442,14 @@
+ 	  This is the driver for the onboard card of MIPS Magnum 4000,
+ 	  Acer PICA, Olivetti M700-10 and a few other identical OEM systems.
+ 
++config GALILEO_64240_ETH
++	tristate "Galileo GT64240 Ethernet support"
++	depends on NET_ETHERNET && MOMENCO_OCELOT_G
++	select MII
++	help
++	  This is the driver for the ethernet interfaces integrated into
++	  the Galileo (now Marvell) GT64240 chipset.
++
+ config MIPS_AU1X00_ENET
+ 	bool "MIPS AU1000 Ethernet support"
+ 	depends on NET_ETHERNET && SOC_AU1X00
+@@ -451,10 +459,6 @@
+ 	  If you have an Alchemy Semi AU1X00 based system
+ 	  say Y.  Otherwise, say N.
+ 
+-config NET_SB1250_MAC
+-	tristate "SB1250 Ethernet support"
+-	depends on NET_ETHERNET && SIBYTE_SB1xxx_SOC
+-
+ config SGI_IOC3_ETH
+ 	bool "SGI IOC3 Ethernet"
+ 	depends on NET_ETHERNET && PCI && SGI_IP27
+@@ -465,26 +469,6 @@
+ 	  the Ethernet-HOWTO, available from
+ 	  <http://www.tldp.org/docs.html#howto>.
+ 
+-config SGI_IOC3_ETH_HW_RX_CSUM
+-	bool "Receive hardware checksums"
+-	depends on SGI_IOC3_ETH && INET
+-	default y
+-	help
+-	  The SGI IOC3 network adapter supports TCP and UDP checksums in
+-	  hardware to offload processing of these checksums from the CPU.  At
+-	  the moment only acceleration of IPv4 is supported.  This option
+-	  enables offloading for checksums on receive.  If unsure, say Y.
+-
+-config SGI_IOC3_ETH_HW_TX_CSUM
+-	bool "Transmit hardware checksums"
+-	depends on SGI_IOC3_ETH && INET
+-	default y
+-	help
+-	  The SGI IOC3 network adapter supports TCP and UDP checksums in
+-	  hardware to offload processing of these checksums from the CPU.  At
+-	  the moment only acceleration of IPv4 is supported.  This option
+-	  enables offloading for checksums on transmit.  If unsure, say Y.
+-
+ config MIPS_SIM_NET
+ 	tristate "MIPS simulator Network device"
+ 	depends on NET_ETHERNET && MIPS_SIM
+@@ -1905,6 +1889,23 @@
+ 
+ if NETDEV_1000
+ 
++config TANGOX_ENET
++	tristate "SMP86xx Builtin Gigabit Ethernet support (SMP864x/SMP865x)"
++	depends on NET_ETHERNET && TANGO3
++	select MII
++	select CRC32
++	help
++	 This option adds support for the SMP86xx integrated Gigabit Ethernet
++	 controller.  This driver uses NAPI and generic Linux MII
++	 support.
++
++config ETHERENET_LED_ON_OFF_IP101A
++	bool "Turn on or off the ethernet led"
++	depends on TANGOX_ENET
++	help
++	  This led chip brand is C+ and the model is IP101A. The option use
++	  MII set phy some register bit to turn on or off the ethernet LED.
++
+ config ACENIC
+ 	tristate "Alteon AceNIC/3Com 3C985/NetGear GA620 Gigabit support"
+ 	depends on PCI
+@@ -2068,6 +2069,10 @@
+ 
+ 	  If in doubt, say N.
+ 
++config NET_SB1250_MAC
++	tristate "SB1250 Ethernet support"
++	depends on SIBYTE_SB1xxx_SOC
++
+ config R8169_VLAN
+ 	bool "VLAN support"
+ 	depends on R8169 && VLAN_8021Q
+@@ -2307,8 +2312,22 @@
+ 	select MII
+ 	help
+ 	  This driver supports the gigabit Ethernet on the Marvell MV643XX
+-	  chipset which is used in the Momenco Ocelot C and Jaguar ATX and
+-	  Pegasos II, amongst other PPC and MIPS boards.
++	  chipset which is used in the Momenco Ocelot C Ocelot, Jaguar ATX
++	  and Pegasos II, amongst other PPC and MIPS boards.
++
++config BIG_SUR_FE
++	bool "PMC-Sierra TITAN Fast Ethernet Support"
++	depends on NET_ETHERNET && PMC_BIG_SUR
++	help
++	  This enables support for the the integrated ethernet of
++	  PMC-Sierra's Big Sur SoC.
++
++config TITAN_GE
++	bool "PMC-Sierra TITAN Gigabit Ethernet Support"
++	depends on PMC_YOSEMITE
++	help
++	  This enables support for the the integrated ethernet of
++	  PMC-Sierra's Titan SoC.
+ 
+ config QLA3XXX
+ 	tristate "QLogic QLA3XXX Network Driver Support"
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/net/Makefile linux_kernel_2.6.22.19-19/drivers/net/Makefile
+--- linux-2.6.22.19/drivers/net/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/net/Makefile	2011-08-23 13:02:26.000000000 +0200
+@@ -112,6 +112,10 @@
+ obj-$(CONFIG_MV643XX_ETH) += mv643xx_eth.o
+ obj-$(CONFIG_QLA3XXX) += qla3xxx.o
+ 
++obj-$(CONFIG_GALILEO_64240_ETH) += gt64240eth.o
++obj-$(CONFIG_BIG_SUR_FE) += big_sur_ge.o
++obj-$(CONFIG_TITAN_GE) += titan_mdio.o titan_ge.o
++
+ obj-$(CONFIG_PPP) += ppp_generic.o
+ obj-$(CONFIG_PPP_ASYNC) += ppp_async.o
+ obj-$(CONFIG_PPP_SYNC_TTY) += ppp_synctty.o
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/pci/probe.c linux_kernel_2.6.22.19-19/drivers/pci/probe.c
+--- linux-2.6.22.19/drivers/pci/probe.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/pci/probe.c	2008-02-26 10:54:25.000000000 +0100
+@@ -22,6 +22,18 @@
+ 
+ LIST_HEAD(pci_devices);
+ 
++/*
++ * Some device drivers need know if pci is initiated.
++ * Basically, we think pci is not initiated when there
++ * is no device in list of pci_devices.
++ */
++int no_pci_devices(void)
++{
++	return list_empty(&pci_devices);
++}
++
++EXPORT_SYMBOL(no_pci_devices);
++
+ #ifdef HAVE_PCI_LEGACY
+ /**
+  * pci_create_legacy_files - create legacy I/O port and memory files
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/rtc/rtc-vr41xx.c linux_kernel_2.6.22.19-19/drivers/rtc/rtc-vr41xx.c
+--- linux-2.6.22.19/drivers/rtc/rtc-vr41xx.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/rtc/rtc-vr41xx.c	2008-02-26 10:54:25.000000000 +0100
+@@ -17,10 +17,11 @@
+  *  along with this program; if not, write to the Free Software
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
++#include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/init.h>
+ #include <linux/ioport.h>
+-#include <linux/irq.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/rtc.h>
+@@ -30,25 +31,11 @@
+ #include <asm/div64.h>
+ #include <asm/io.h>
+ #include <asm/uaccess.h>
+-#include <asm/vr41xx/irq.h>
+ 
+ MODULE_AUTHOR("Yoichi Yuasa <yoichi_yuasa@tripeaks.co.jp>");
+ MODULE_DESCRIPTION("NEC VR4100 series RTC driver");
+ MODULE_LICENSE("GPL");
+ 
+-#define RTC1_TYPE1_START	0x0b0000c0UL
+-#define RTC1_TYPE1_END		0x0b0000dfUL
+-#define RTC2_TYPE1_START	0x0b0001c0UL
+-#define RTC2_TYPE1_END		0x0b0001dfUL
+-
+-#define RTC1_TYPE2_START	0x0f000100UL
+-#define RTC1_TYPE2_END		0x0f00011fUL
+-#define RTC2_TYPE2_START	0x0f000120UL
+-#define RTC2_TYPE2_END		0x0f00013fUL
+-
+-#define RTC1_SIZE		0x20
+-#define RTC2_SIZE		0x20
+-
+ /* RTC 1 registers */
+ #define ETIMELREG		0x00
+ #define ETIMEMREG		0x02
+@@ -98,13 +85,8 @@
+ static unsigned long periodic_frequency;
+ static unsigned long periodic_count;
+ static unsigned int alarm_enabled;
+-
+-struct resource rtc_resource[2] = {
+-	{	.name	= rtc_name,
+-		.flags	= IORESOURCE_MEM,	},
+-	{	.name	= rtc_name,
+-		.flags	= IORESOURCE_MEM,	},
+-};
++static int aie_irq = -1;
++static int pie_irq = -1;
+ 
+ static inline unsigned long read_elapsed_second(void)
+ {
+@@ -150,8 +132,8 @@
+ 
+ 	spin_unlock_irq(&rtc_lock);
+ 
+-	disable_irq(ELAPSEDTIME_IRQ);
+-	disable_irq(RTCLONG1_IRQ);
++	disable_irq(aie_irq);
++	disable_irq(pie_irq);
+ }
+ 
+ static int vr41xx_rtc_read_time(struct device *dev, struct rtc_time *time)
+@@ -209,14 +191,14 @@
+ 	spin_lock_irq(&rtc_lock);
+ 
+ 	if (alarm_enabled)
+-		disable_irq(ELAPSEDTIME_IRQ);
++		disable_irq(aie_irq);
+ 
+ 	rtc1_write(ECMPLREG, (uint16_t)(alarm_sec << 15));
+ 	rtc1_write(ECMPMREG, (uint16_t)(alarm_sec >> 1));
+ 	rtc1_write(ECMPHREG, (uint16_t)(alarm_sec >> 17));
+ 
+ 	if (wkalrm->enabled)
+-		enable_irq(ELAPSEDTIME_IRQ);
++		enable_irq(aie_irq);
+ 
+ 	alarm_enabled = wkalrm->enabled;
+ 
+@@ -234,7 +216,7 @@
+ 		spin_lock_irq(&rtc_lock);
+ 
+ 		if (!alarm_enabled) {
+-			enable_irq(ELAPSEDTIME_IRQ);
++			enable_irq(aie_irq);
+ 			alarm_enabled = 1;
+ 		}
+ 
+@@ -244,17 +226,17 @@
+ 		spin_lock_irq(&rtc_lock);
+ 
+ 		if (alarm_enabled) {
+-			disable_irq(ELAPSEDTIME_IRQ);
++			disable_irq(aie_irq);
+ 			alarm_enabled = 0;
+ 		}
+ 
+ 		spin_unlock_irq(&rtc_lock);
+ 		break;
+ 	case RTC_PIE_ON:
+-		enable_irq(RTCLONG1_IRQ);
++		enable_irq(pie_irq);
+ 		break;
+ 	case RTC_PIE_OFF:
+-		disable_irq(RTCLONG1_IRQ);
++		disable_irq(pie_irq);
+ 		break;
+ 	case RTC_IRQP_READ:
+ 		return put_user(periodic_frequency, (unsigned long __user *)arg);
+@@ -331,31 +313,37 @@
+ 
+ static int __devinit rtc_probe(struct platform_device *pdev)
+ {
++	struct resource *res;
+ 	struct rtc_device *rtc;
+-	unsigned int irq;
+ 	int retval;
+ 
+-	if (pdev->num_resources != 2)
++	if (pdev->num_resources != 4)
+ 		return -EBUSY;
+ 
+-	rtc1_base = ioremap(pdev->resource[0].start, RTC1_SIZE);
+-	if (rtc1_base == NULL)
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
+ 		return -EBUSY;
+ 
+-	rtc2_base = ioremap(pdev->resource[1].start, RTC2_SIZE);
+-	if (rtc2_base == NULL) {
+-		iounmap(rtc1_base);
+-		rtc1_base = NULL;
++	rtc1_base = ioremap(res->start, res->end - res->start + 1);
++	if (!rtc1_base)
+ 		return -EBUSY;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res) {
++		retval = -EBUSY;
++		goto err_rtc1_iounmap;
++	}
++
++	rtc2_base = ioremap(res->start, res->end - res->start + 1);
++	if (!rtc2_base) {
++		retval = -EBUSY;
++		goto err_rtc1_iounmap;
+ 	}
+ 
+ 	rtc = rtc_device_register(rtc_name, &pdev->dev, &vr41xx_rtc_ops, THIS_MODULE);
+ 	if (IS_ERR(rtc)) {
+-		iounmap(rtc1_base);
+-		iounmap(rtc2_base);
+-		rtc1_base = NULL;
+-		rtc2_base = NULL;
+-		return PTR_ERR(rtc);
++		retval = PTR_ERR(rtc);
++		goto err_iounmap_all;
+ 	}
+ 
+ 	spin_lock_irq(&rtc_lock);
+@@ -368,35 +356,50 @@
+ 
+ 	spin_unlock_irq(&rtc_lock);
+ 
+-	irq = ELAPSEDTIME_IRQ;
+-	retval = request_irq(irq, elapsedtime_interrupt, IRQF_DISABLED,
+-	                     "elapsed_time", pdev);
+-	if (retval == 0) {
+-		irq = RTCLONG1_IRQ;
+-		retval = request_irq(irq, rtclong1_interrupt, IRQF_DISABLED,
+-		                     "rtclong1", pdev);
++	aie_irq = platform_get_irq(pdev, 0);
++	if (aie_irq < 0 || aie_irq >= NR_IRQS) {
++		retval = -EBUSY;
++		goto err_device_unregister;
+ 	}
+ 
+-	if (retval < 0) {
+-		printk(KERN_ERR "rtc: IRQ%d is busy\n", irq);
+-		rtc_device_unregister(rtc);
+-		if (irq == RTCLONG1_IRQ)
+-			free_irq(ELAPSEDTIME_IRQ, NULL);
+-		iounmap(rtc1_base);
+-		iounmap(rtc2_base);
+-		rtc1_base = NULL;
+-		rtc2_base = NULL;
+-		return retval;
+-	}
++	retval = request_irq(aie_irq, elapsedtime_interrupt, IRQF_DISABLED,
++	                     "elapsed_time", pdev);
++	if (retval < 0)
++		goto err_device_unregister;
++
++	pie_irq = platform_get_irq(pdev, 1);
++	if (pie_irq < 0 || pie_irq >= NR_IRQS)
++		goto err_free_irq;
++
++	retval = request_irq(pie_irq, rtclong1_interrupt, IRQF_DISABLED,
++		             "rtclong1", pdev);
++	if (retval < 0)
++		goto err_free_irq;
+ 
+ 	platform_set_drvdata(pdev, rtc);
+ 
+-	disable_irq(ELAPSEDTIME_IRQ);
+-	disable_irq(RTCLONG1_IRQ);
++	disable_irq(aie_irq);
++	disable_irq(pie_irq);
+ 
+ 	printk(KERN_INFO "rtc: Real Time Clock of NEC VR4100 series\n");
+ 
+ 	return 0;
++
++err_free_irq:
++	free_irq(aie_irq, pdev);
++
++err_device_unregister:
++	rtc_device_unregister(rtc);
++
++err_iounmap_all:
++	iounmap(rtc2_base);
++	rtc2_base = NULL;
++
++err_rtc1_iounmap:
++	iounmap(rtc1_base);
++	rtc1_base = NULL;
++
++	return retval;
+ }
+ 
+ static int __devexit rtc_remove(struct platform_device *pdev)
+@@ -404,23 +407,21 @@
+ 	struct rtc_device *rtc;
+ 
+ 	rtc = platform_get_drvdata(pdev);
+-	if (rtc != NULL)
++	if (rtc)
+ 		rtc_device_unregister(rtc);
+ 
+ 	platform_set_drvdata(pdev, NULL);
+ 
+-	free_irq(ELAPSEDTIME_IRQ, NULL);
+-	free_irq(RTCLONG1_IRQ, NULL);
+-	if (rtc1_base != NULL)
++	free_irq(aie_irq, pdev);
++	free_irq(pie_irq, pdev);
++	if (rtc1_base)
+ 		iounmap(rtc1_base);
+-	if (rtc2_base != NULL)
++	if (rtc2_base)
+ 		iounmap(rtc2_base);
+ 
+ 	return 0;
+ }
+ 
+-static struct platform_device *rtc_platform_device;
+-
+ static struct platform_driver rtc_platform_driver = {
+ 	.probe		= rtc_probe,
+ 	.remove		= __devexit_p(rtc_remove),
+@@ -432,55 +433,12 @@
+ 
+ static int __init vr41xx_rtc_init(void)
+ {
+-	int retval;
+-
+-	switch (current_cpu_data.cputype) {
+-	case CPU_VR4111:
+-	case CPU_VR4121:
+-		rtc_resource[0].start = RTC1_TYPE1_START;
+-		rtc_resource[0].end = RTC1_TYPE1_END;
+-		rtc_resource[1].start = RTC2_TYPE1_START;
+-		rtc_resource[1].end = RTC2_TYPE1_END;
+-		break;
+-	case CPU_VR4122:
+-	case CPU_VR4131:
+-	case CPU_VR4133:
+-		rtc_resource[0].start = RTC1_TYPE2_START;
+-		rtc_resource[0].end = RTC1_TYPE2_END;
+-		rtc_resource[1].start = RTC2_TYPE2_START;
+-		rtc_resource[1].end = RTC2_TYPE2_END;
+-		break;
+-	default:
+-		return -ENODEV;
+-		break;
+-	}
+-
+-	rtc_platform_device = platform_device_alloc("RTC", -1);
+-	if (rtc_platform_device == NULL)
+-		return -ENOMEM;
+-
+-	retval = platform_device_add_resources(rtc_platform_device,
+-				rtc_resource, ARRAY_SIZE(rtc_resource));
+-
+-	if (retval == 0)
+-		retval = platform_device_add(rtc_platform_device);
+-
+-	if (retval < 0) {
+-		platform_device_put(rtc_platform_device);
+-		return retval;
+-	}
+-
+-	retval = platform_driver_register(&rtc_platform_driver);
+-	if (retval < 0)
+-		platform_device_unregister(rtc_platform_device);
+-
+-	return retval;
++	return platform_driver_register(&rtc_platform_driver);
+ }
+ 
+ static void __exit vr41xx_rtc_exit(void)
+ {
+ 	platform_driver_unregister(&rtc_platform_driver);
+-	platform_device_unregister(rtc_platform_device);
+ }
+ 
+ module_init(vr41xx_rtc_init);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/scsi/NCR53C9x.h linux_kernel_2.6.22.19-19/drivers/scsi/NCR53C9x.h
+--- linux-2.6.22.19/drivers/scsi/NCR53C9x.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/scsi/NCR53C9x.h	2008-02-26 10:54:25.000000000 +0100
+@@ -144,12 +144,7 @@
+ 
+ #ifndef MULTIPLE_PAD_SIZES
+ 
+-#ifdef CONFIG_CPU_HAS_WB
+-#include <asm/wbflush.h>
+-#define esp_write(__reg, __val) do{(__reg) = (__val); wbflush();} while(0)
+-#else
+-#define esp_write(__reg, __val) ((__reg) = (__val))
+-#endif
++#define esp_write(__reg, __val) do{(__reg) = (__val); iob();} while(0)
+ #define esp_read(__reg) (__reg)
+ 
+ struct ESP_regs {
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/scsi/scsi_lib.c linux_kernel_2.6.22.19-19/drivers/scsi/scsi_lib.c
+--- linux-2.6.22.19/drivers/scsi/scsi_lib.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/scsi/scsi_lib.c	2009-09-24 09:11:26.000000000 +0200
+@@ -1190,8 +1190,10 @@
+ 			 * commands.  The device must be brought online
+ 			 * before trying any recovery commands.
+ 			 */
++#if 0
+ 			sdev_printk(KERN_ERR, sdev,
+ 				    "rejecting I/O to offline device\n");
++#endif
+ 			ret = BLKPREP_KILL;
+ 			break;
+ 		case SDEV_DEL:
+@@ -1199,8 +1201,10 @@
+ 			 * If the device is fully deleted, we refuse to
+ 			 * process any commands as well.
+ 			 */
++#if 0
+ 			sdev_printk(KERN_ERR, sdev,
+ 				    "rejecting I/O to dead device\n");
++#endif
+ 			ret = BLKPREP_KILL;
+ 			break;
+ 		case SDEV_QUIESCE:
+@@ -1454,8 +1458,10 @@
+ 			break;
+ 
+ 		if (unlikely(!scsi_device_online(sdev))) {
++#if 0
+ 			sdev_printk(KERN_ERR, sdev,
+ 				    "rejecting I/O to offline device\n");
++#endif
+ 			scsi_kill_request(req, q);
+ 			continue;
+ 		}
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/scsi/sgiwd93.c linux_kernel_2.6.22.19-19/drivers/scsi/sgiwd93.c
+--- linux-2.6.22.19/drivers/scsi/sgiwd93.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/scsi/sgiwd93.c	2008-02-26 10:54:25.000000000 +0100
+@@ -159,6 +159,7 @@
+ 	udelay(50);
+ 	hregs->ctrl = 0;
+ }
++EXPORT_SYMBOL_GPL(sgiwd93_reset);
+ 
+ static inline void init_hpc_chain(struct hpc_data *hd)
+ {
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/serial/ip22zilog.c linux_kernel_2.6.22.19-19/drivers/serial/ip22zilog.c
+--- linux-2.6.22.19/drivers/serial/ip22zilog.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/serial/ip22zilog.c	2008-02-26 10:54:25.000000000 +0100
+@@ -862,6 +862,7 @@
+ 	up->cflag = termios->c_cflag;
+ 
+ 	ip22zilog_maybe_update_regs(up, ZILOG_CHANNEL_FROM_PORT(port));
++	uart_update_timeout(port, termios->c_cflag, baud);
+ 
+ 	spin_unlock_irqrestore(&up->port.lock, flags);
+ }
+@@ -1017,6 +1018,8 @@
+ 	}
+ 
+ 	con->cflag = cflag | CS8;			/* 8N1 */
++
++	uart_update_timeout(&ip22zilog_port_table[con->index].port, cflag, baud);
+ }
+ 
+ static int __init ip22zilog_console_setup(struct console *con, char *options)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/serial/vr41xx_siu.c linux_kernel_2.6.22.19-19/drivers/serial/vr41xx_siu.c
+--- linux-2.6.22.19/drivers/serial/vr41xx_siu.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/serial/vr41xx_siu.c	2008-02-26 10:54:25.000000000 +0100
+@@ -1,7 +1,7 @@
+ /*
+  *  Driver for NEC VR4100 series Serial Interface Unit.
+  *
+- *  Copyright (C) 2004-2005  Yoichi Yuasa <yoichi_yuasa@tripeaks.co.jp>
++ *  Copyright (C) 2004-2007  Yoichi Yuasa <yoichi_yuasa@tripeaks.co.jp>
+  *
+  *  Based on drivers/serial/8250.c, by Russell King.
+  *
+@@ -25,12 +25,12 @@
+ #endif
+ 
+ #include <linux/console.h>
+-#include <linux/platform_device.h>
+-#include <linux/err.h>
+-#include <linux/ioport.h>
++#include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/ioport.h>
+ #include <linux/module.h>
++#include <linux/platform_device.h>
+ #include <linux/serial.h>
+ #include <linux/serial_core.h>
+ #include <linux/serial_reg.h>
+@@ -38,11 +38,9 @@
+ #include <linux/tty_flip.h>
+ 
+ #include <asm/io.h>
+-#include <asm/vr41xx/irq.h>
+ #include <asm/vr41xx/siu.h>
+ #include <asm/vr41xx/vr41xx.h>
+ 
+-#define SIU_PORTS_MAX	2
+ #define SIU_BAUD_BASE	1152000
+ #define SIU_MAJOR	204
+ #define SIU_MINOR_BASE	82
+@@ -60,32 +58,13 @@
+  #define IRUSESEL	0x02
+  #define SIRSEL		0x01
+ 
+-struct siu_port {
+-	unsigned int type;
+-	unsigned int irq;
+-	unsigned long start;
+-};
+-
+-static const struct siu_port siu_type1_ports[] = {
+-	{	.type		= PORT_VR41XX_SIU,
+-		.irq		= SIU_IRQ,
+-		.start		= 0x0c000000UL,		},
+-};
+-
+-#define SIU_TYPE1_NR_PORTS	(sizeof(siu_type1_ports) / sizeof(struct siu_port))
+-
+-static const struct siu_port siu_type2_ports[] = {
+-	{	.type		= PORT_VR41XX_SIU,
+-		.irq		= SIU_IRQ,
+-		.start		= 0x0f000800UL,		},
+-	{	.type		= PORT_VR41XX_DSIU,
+-		.irq		= DSIU_IRQ,
+-		.start		= 0x0f000820UL,		},
++static struct uart_port siu_uart_ports[SIU_PORTS_MAX] = {
++	[0 ... SIU_PORTS_MAX-1] = {
++		.lock	= __SPIN_LOCK_UNLOCKED(siu_uart_ports->lock),
++		.irq	= -1,
++	},
+ };
+ 
+-#define SIU_TYPE2_NR_PORTS	(sizeof(siu_type2_ports) / sizeof(struct siu_port))
+-
+-static struct uart_port siu_uart_ports[SIU_PORTS_MAX];
+ static uint8_t lsr_break_flag[SIU_PORTS_MAX];
+ 
+ #define siu_read(port, offset)		readb((port)->membase + (offset))
+@@ -177,21 +153,6 @@
+ 	siu_write(port, UART_FCR, 0);
+ }
+ 
+-static inline int siu_probe_ports(void)
+-{
+-	switch (current_cpu_data.cputype) {
+-	case CPU_VR4111:
+-	case CPU_VR4121:
+-		return SIU_TYPE1_NR_PORTS;
+-	case CPU_VR4122:
+-	case CPU_VR4131:
+-	case CPU_VR4133:
+-		return SIU_TYPE2_NR_PORTS;
+-	}
+-
+-	return 0;
+-}
+-
+ static inline unsigned long siu_port_size(struct uart_port *port)
+ {
+ 	switch (port->type) {
+@@ -206,21 +167,10 @@
+ 
+ static inline unsigned int siu_check_type(struct uart_port *port)
+ {
+-	switch (current_cpu_data.cputype) {
+-	case CPU_VR4111:
+-	case CPU_VR4121:
+ 		if (port->line == 0)
+ 			return PORT_VR41XX_SIU;
+-		break;
+-	case CPU_VR4122:
+-	case CPU_VR4131:
+-	case CPU_VR4133:
+-		if (port->line == 0)
+-			return PORT_VR41XX_SIU;
+-		else if (port->line == 1)
++	if (port->line == 1 && port->irq != -1)
+ 			return PORT_VR41XX_DSIU;
+-		break;
+-	}
+ 
+ 	return PORT_UNKNOWN;
+ }
+@@ -751,44 +701,34 @@
+ 	.verify_port	= siu_verify_port,
+ };
+ 
+-static int siu_init_ports(void)
++static int siu_init_ports(struct platform_device *pdev)
+ {
+-	const struct siu_port *siu;
+ 	struct uart_port *port;
+-	int i, num;
++	struct resource *res;
++	int *type = pdev->dev.platform_data;
++	int i;
+ 
+-	switch (current_cpu_data.cputype) {
+-	case CPU_VR4111:
+-	case CPU_VR4121:
+-		siu = siu_type1_ports;
+-		break;
+-	case CPU_VR4122:
+-	case CPU_VR4131:
+-	case CPU_VR4133:
+-		siu = siu_type2_ports;
+-		break;
+-	default:
++	if (!type)
+ 		return 0;
+-	}
+ 
+ 	port = siu_uart_ports;
+-	num = siu_probe_ports();
+-	for (i = 0; i < num; i++) {
+-		spin_lock_init(&port->lock);
+-		port->irq = siu->irq;
++	for (i = 0; i < SIU_PORTS_MAX; i++) {
++		port->type = type[i];
++		if (port->type == PORT_UNKNOWN)
++			continue;
++		port->irq = platform_get_irq(pdev, i);
+ 		port->uartclk = SIU_BAUD_BASE * 16;
+ 		port->fifosize = 16;
+ 		port->regshift = 0;
+ 		port->iotype = UPIO_MEM;
+ 		port->flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+-		port->type = siu->type;
+ 		port->line = i;
+-		port->mapbase = siu->start;
+-		siu++;
++		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
++		port->mapbase = res->start;
+ 		port++;
+ 	}
+ 
+-	return num;
++	return i;
+ }
+ 
+ #ifdef CONFIG_SERIAL_VR41XX_CONSOLE
+@@ -883,13 +823,9 @@
+ static int __devinit siu_console_init(void)
+ {
+ 	struct uart_port *port;
+-	int num, i;
+-
+-	num = siu_init_ports();
+-	if (num <= 0)
+-		return -ENODEV;
++	int i;
+ 
+-	for (i = 0; i < num; i++) {
++	for (i = 0; i < SIU_PORTS_MAX; i++) {
+ 		port = &siu_uart_ports[i];
+ 		port->ops = &siu_uart_ops;
+ 	}
+@@ -920,7 +856,7 @@
+ 	struct uart_port *port;
+ 	int num, i, retval;
+ 
+-	num = siu_init_ports();
++	num = siu_init_ports(dev);
+ 	if (num <= 0)
+ 		return -ENODEV;
+ 
+@@ -998,8 +934,6 @@
+ 	return 0;
+ }
+ 
+-static struct platform_device *siu_platform_device;
+-
+ static struct platform_driver siu_device_driver = {
+ 	.probe		= siu_probe,
+ 	.remove		= __devexit_p(siu_remove),
+@@ -1013,29 +947,12 @@
+ 
+ static int __init vr41xx_siu_init(void)
+ {
+-	int retval;
+-
+-	siu_platform_device = platform_device_alloc("SIU", -1);
+-	if (!siu_platform_device)
+-		return -ENOMEM;
+-
+-	retval = platform_device_add(siu_platform_device);
+-	if (retval < 0) {
+-		platform_device_put(siu_platform_device);
+-		return retval;
+-	}
+-
+-	retval = platform_driver_register(&siu_device_driver);
+-	if (retval < 0)
+-		platform_device_unregister(siu_platform_device);
+-
+-	return retval;
++	return platform_driver_register(&siu_device_driver);
+ }
+ 
+ static void __exit vr41xx_siu_exit(void)
+ {
+ 	platform_driver_unregister(&siu_device_driver);
+-	platform_device_unregister(siu_platform_device);
+ }
+ 
+ module_init(vr41xx_siu_init);
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/usb/storage/usb.c linux_kernel_2.6.22.19-19/drivers/usb/storage/usb.c
+--- linux-2.6.22.19/drivers/usb/storage/usb.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/usb/storage/usb.c	2009-09-24 09:11:26.000000000 +0200
+@@ -967,6 +967,7 @@
+ 		return -ENOMEM;
+ 	}
+ 
++	host->max_cmd_len = 16;
+ 	us = host_to_us(host);
+ 	memset(us, 0, sizeof(struct us_data));
+ 	mutex_init(&(us->dev_mutex));
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/video/Kconfig linux_kernel_2.6.22.19-19/drivers/video/Kconfig
+--- linux-2.6.22.19/drivers/video/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/video/Kconfig	2011-08-23 13:02:26.000000000 +0200
+@@ -1459,6 +1459,17 @@
+ 	  Please read the <file:Documentation/fb/README-sstfb.txt> for supported
+ 	  options and other important info  support.
+ 
++config FB_SMIVGX
++	tristate "Silicon Motion VoyagerGX support"
++	depends on FB && PCI && (MIPS || EXPERIMENTAL)
++	select FB_CFB_FILLRECT
++	select FB_CFB_COPYAREA
++	select FB_CFB_IMAGEBLIT
++	---help---
++	  This drivers supports SMI VoyagerGX 501 based PCI boards
++	  The default settings drive both a CRT and LCD.  The CRT
++	  can be turned off by passing in the no_crt option
++
+ config FB_VT8623
+ 	tristate "VIA VT8623 support"
+ 	depends on FB && PCI
+@@ -1554,7 +1565,25 @@
+ 
+ config FB_AU1100
+ 	bool "Au1100 LCD Driver"
+-	depends on (FB = y) && EXPERIMENTAL && PCI && MIPS && MIPS_PB1100=y
++	depends on FB && MIPS && SOC_AU1100
++	select FB_CFB_FILLRECT
++	select FB_CFB_COPYAREA
++	select FB_CFB_IMAGEBLIT
++	help
++	  This is the framebuffer driver for the AMD Au1100 SOC.  It can drive
++	  various panels and CRTs by passing in kernel cmd line option
++	  au1100fb:panel=<name>.
++
++config FB_AU1200
++	bool "Au1200 LCD Driver"
++	depends on FB && MIPS && SOC_AU1200
++	select FB_CFB_FILLRECT
++	select FB_CFB_COPYAREA
++	select FB_CFB_IMAGEBLIT
++	help
++	  This is the framebuffer driver for the AMD Au1200 SOC.  It can drive
++	  various panels and CRTs by passing in kernel cmd line option
++	  au1200fb:panel=<name>.
+ 
+ config FB_AU1200
+ 	bool "Au1200 LCD Driver"
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/drivers/video/Makefile linux_kernel_2.6.22.19-19/drivers/video/Makefile
+--- linux-2.6.22.19/drivers/video/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/drivers/video/Makefile	2008-02-26 10:54:25.000000000 +0100
+@@ -106,6 +106,7 @@
+ obj-$(CONFIG_FB_TX3912)		  += tx3912fb.o
+ obj-$(CONFIG_FB_S1D13XXX)	  += s1d13xxxfb.o
+ obj-$(CONFIG_FB_IMX)              += imxfb.o
++obj-$(CONFIG_FB_SMIVGX)		  += smivgxfb.o
+ obj-$(CONFIG_FB_S3C2410)	  += s3c2410fb.o
+ obj-$(CONFIG_FB_PNX4008_DUM)	  += pnx4008/
+ obj-$(CONFIG_FB_PNX4008_DUM_RGB)  += pnx4008/
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/fs/fat/dir.c linux_kernel_2.6.22.19-19/fs/fat/dir.c
+--- linux-2.6.22.19/fs/fat/dir.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/fs/fat/dir.c	2009-09-24 09:11:26.000000000 +0200
+@@ -86,8 +86,10 @@
+ 
+ 	*bh = sb_bread(sb, phys);
+ 	if (*bh == NULL) {
++#if 0
+ 		printk(KERN_ERR "FAT: Directory bread(block %llu) failed\n",
+ 		       (unsigned long long)phys);
++#endif
+ 		/* skip this block */
+ 		*pos = (iblock + 1) << sb->s_blocksize_bits;
+ 		goto next;
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/fs/fat/fatent.c linux_kernel_2.6.22.19-19/fs/fat/fatent.c
+--- linux-2.6.22.19/fs/fat/fatent.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/fs/fat/fatent.c	2009-09-24 09:11:26.000000000 +0200
+@@ -89,8 +89,10 @@
+ err_brelse:
+ 	brelse(bhs[0]);
+ err:
++#if 0
+ 	printk(KERN_ERR "FAT: FAT read failed (blocknr %llu)\n",
+ 	       (unsigned long long)blocknr);
++#endif
+ 	return -EIO;
+ }
+ 
+@@ -102,8 +104,10 @@
+ 	WARN_ON(blocknr < MSDOS_SB(sb)->fat_start);
+ 	fatent->bhs[0] = sb_bread(sb, blocknr);
+ 	if (!fatent->bhs[0]) {
++#if 0
+ 		printk(KERN_ERR "FAT: FAT read failed (blocknr %llu)\n",
+ 		       (unsigned long long)blocknr);
++#endif
+ 		return -EIO;
+ 	}
+ 	fatent->nr_bhs = 1;
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/fs/fat/misc.c linux_kernel_2.6.22.19-19/fs/fat/misc.c
+--- linux-2.6.22.19/fs/fat/misc.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/fs/fat/misc.c	2009-09-24 09:11:26.000000000 +0200
+@@ -48,7 +48,9 @@
+ 
+ 	bh = sb_bread(sb, sbi->fsinfo_sector);
+ 	if (bh == NULL) {
++#if 0
+ 		printk(KERN_ERR "FAT: bread failed in fat_clusters_flush\n");
++#endif
+ 		return;
+ 	}
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-i386/ide.h linux_kernel_2.6.22.19-19/include/asm-i386/ide.h
+--- linux-2.6.22.19/include/asm-i386/ide.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-i386/ide.h	2008-02-26 10:54:25.000000000 +0100
+@@ -40,14 +40,13 @@
+ 
+ static __inline__ unsigned long ide_default_io_base(int index)
+ {
+-	struct pci_dev *pdev;
+ 	/*
+ 	 *	If PCI is present then it is not safe to poke around
+ 	 *	the other legacy IDE ports. Only 0x1f0 and 0x170 are
+ 	 *	defined compatibility mode ports for PCI. A user can 
+ 	 *	override this using ide= but we must default safe.
+ 	 */
+-	if ((pdev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, NULL)) == NULL) {
++	if (no_pci_devices()) {
+ 		switch(index) {
+ 			case 2: return 0x1e8;
+ 			case 3: return 0x168;
+@@ -55,7 +54,6 @@
+ 			case 5: return 0x160;
+ 		}
+ 	}
+-	pci_dev_put(pdev);
+ 	switch (index) {
+ 		case 0:	return 0x1f0;
+ 		case 1:	return 0x170;
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/cpu-features.h linux_kernel_2.6.22.19-19/include/asm-mips/cpu-features.h
+--- linux-2.6.22.19/include/asm-mips/cpu-features.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/cpu-features.h	2011-08-23 13:02:26.000000000 +0200
+@@ -150,6 +150,10 @@
+ #define cpu_has_mipsmt		(cpu_data[0].ases & MIPS_ASE_MIPSMT)
+ #endif
+ 
++#ifndef cpu_has_userlocal
++#define cpu_has_userlocal	(cpu_data[0].options & MIPS_CPU_ULRI)
++#endif
++
+ #ifdef CONFIG_32BIT
+ # ifndef cpu_has_nofpuex
+ # define cpu_has_nofpuex	(cpu_data[0].options & MIPS_CPU_NOFPUEX)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/cpu.h linux_kernel_2.6.22.19-19/include/asm-mips/cpu.h
+--- linux-2.6.22.19/include/asm-mips/cpu.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/cpu.h	2008-02-26 10:54:25.000000000 +0100
+@@ -257,6 +257,7 @@
+ #define MIPS_CPU_PREFETCH	0x00080000 /* CPU has usable prefetch */
+ #define MIPS_CPU_VINT		0x00100000 /* CPU supports MIPSR2 vectored interrupts */
+ #define MIPS_CPU_VEIC		0x00200000 /* CPU supports MIPSR2 external interrupt controller mode */
++#define MIPS_CPU_ULRI		0x00400000 /* CPU has ULRI feature */
+ 
+ /*
+  * CPU ASE encodings
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/cpu-info.h linux_kernel_2.6.22.19-19/include/asm-mips/cpu-info.h
+--- linux-2.6.22.19/include/asm-mips/cpu-info.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/cpu-info.h	2008-02-26 10:54:25.000000000 +0100
+@@ -72,6 +72,7 @@
+ 	struct cache_desc	dcache;	/* Primary D or combined I/D cache */
+ 	struct cache_desc	scache;	/* Secondary cache */
+ 	struct cache_desc	tcache;	/* Tertiary/split secondary cache */
++	int			srsets;	/* Shadow register sets */
+ #if defined(CONFIG_MIPS_MT_SMTC)
+ 	/*
+ 	 * In the MIPS MT "SMTC" model, each TC is considered
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/fcntl.h linux_kernel_2.6.22.19-19/include/asm-mips/fcntl.h
+--- linux-2.6.22.19/include/asm-mips/fcntl.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/fcntl.h	2008-02-26 10:54:25.000000000 +0100
+@@ -13,6 +13,7 @@
+ #define O_SYNC		0x0010
+ #define O_NONBLOCK	0x0080
+ #define O_CREAT         0x0100	/* not fcntl */
++#define O_TRUNC		0x0200	/* not fcntl */
+ #define O_EXCL		0x0400	/* not fcntl */
+ #define O_NOCTTY	0x0800	/* not fcntl */
+ #define FASYNC		0x1000	/* fcntl, for BSD compatibility */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/futex.h linux_kernel_2.6.22.19-19/include/asm-mips/futex.h
+--- linux-2.6.22.19/include/asm-mips/futex.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/futex.h	2008-02-26 10:54:25.000000000 +0100
+@@ -35,7 +35,7 @@
+ 		"	.set	mips0				\n"	\
+ 		"	.section .fixup,\"ax\"			\n"	\
+ 		"4:	li	%0, %6				\n"	\
+-		"	j	2b				\n"	\
++		"	j	3b				\n"	\
+ 		"	.previous				\n"	\
+ 		"	.section __ex_table,\"a\"		\n"	\
+ 		"	"__UA_ADDR "\t1b, 4b			\n"	\
+@@ -61,7 +61,7 @@
+ 		"	.set	mips0				\n"	\
+ 		"	.section .fixup,\"ax\"			\n"	\
+ 		"4:	li	%0, %6				\n"	\
+-		"	j	2b				\n"	\
++		"	j	3b				\n"	\
+ 		"	.previous				\n"	\
+ 		"	.section __ex_table,\"a\"		\n"	\
+ 		"	"__UA_ADDR "\t1b, 4b			\n"	\
+@@ -200,4 +200,4 @@
+ }
+ 
+ #endif
+-#endif
++#endif /* _ASM_FUTEX_H */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/hazards.h linux_kernel_2.6.22.19-19/include/asm-mips/hazards.h
+--- linux-2.6.22.19/include/asm-mips/hazards.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/hazards.h	2008-02-26 10:54:25.000000000 +0100
+@@ -15,6 +14,8 @@
+ #define ASMMACRO(name, code...) .macro name; code; .endm
+ #else
+ 
++#include <asm/cpu-features.h>
++
+ #define ASMMACRO(name, code...)						\
+ __asm__(".macro " #name "; " #code "; .endm");				\
+ 									\
+@@ -81,6 +82,57 @@
+ 	: "=r" (tmp));							\
+ } while (0)
+ 
++#elif defined(CONFIG_CPU_MIPSR1)
++
++/*
++ * These are slightly complicated by the fact that we guarantee R1 kernels to
++ * run fine on R2 processors.
++ */
++ASMMACRO(mtc0_tlbw_hazard,
++	_ssnop; _ssnop; _ehb
++	)
++ASMMACRO(tlbw_use_hazard,
++	_ssnop; _ssnop; _ssnop; _ehb
++	)
++ASMMACRO(tlb_probe_hazard,
++	 _ssnop; _ssnop; _ssnop; _ehb
++	)
++ASMMACRO(irq_enable_hazard,
++	 _ssnop; _ssnop; _ssnop; _ehb
++	)
++ASMMACRO(irq_disable_hazard,
++	_ssnop; _ssnop; _ssnop; _ehb
++	)
++ASMMACRO(back_to_back_c0_hazard,
++	 _ssnop; _ssnop; _ssnop; _ehb
++	)
++/*
++ * gcc has a tradition of misscompiling the previous construct using the
++ * address of a label as argument to inline assembler.  Gas otoh has the
++ * annoying difference between la and dla which are only usable for 32-bit
++ * rsp. 64-bit code, so can't be used without conditional compilation.
++ * The alterantive is switching the assembler to 64-bit code which happens
++ * to work right even for 32-bit code ...
++ */
++#define __instruction_hazard()						\
++do {									\
++	unsigned long tmp;						\
++									\
++	__asm__ __volatile__(						\
++	"	.set	mips64r2				\n"	\
++	"	dla	%0, 1f					\n"	\
++	"	jr.hb	%0					\n"	\
++	"	.set	mips0					\n"	\
++	"1:							\n"	\
++	: "=r" (tmp));							\
++} while (0)
++
++#define instruction_hazard()						\
++do {									\
++	if (cpu_has_mips_r2)						\
++		__instruction_hazard();					\
++} while (0)
++
+ #elif defined(CONFIG_CPU_R10000)
+ 
+ /*
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/irq.h linux_kernel_2.6.22.19-19/include/asm-mips/irq.h
+--- linux-2.6.22.19/include/asm-mips/irq.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/irq.h	2008-02-26 10:54:25.000000000 +0100
+@@ -24,7 +24,7 @@
+ #define irq_canonicalize(irq) (irq)	/* Sane hardware, sane code ... */
+ #endif
+ 
+-#ifdef CONFIG_MIPS_MT_SMTC
++#ifdef CONFIG_MIPS_MT_SMTC_IM_BACKSTOP
+ /*
+  * Clear interrupt mask handling "backstop" if irq_hwmask
+  * entry so indicates. This implies that the ack() or end()
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/local.h linux_kernel_2.6.22.19-19/include/asm-mips/local.h
+--- linux-2.6.22.19/include/asm-mips/local.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/local.h	2008-02-26 10:54:25.000000000 +0100
+@@ -114,68 +114,6 @@
+ 	return result;
+ }
+ 
+-/*
+- * local_sub_if_positive - conditionally subtract integer from atomic variable
+- * @i: integer value to subtract
+- * @l: pointer of type local_t
+- *
+- * Atomically test @l and subtract @i if @l is greater or equal than @i.
+- * The function returns the old value of @l minus @i.
+- */
+-static __inline__ long local_sub_if_positive(long i, local_t * l)
+-{
+-	unsigned long result;
+-
+-	if (cpu_has_llsc && R10000_LLSC_WAR) {
+-		unsigned long temp;
+-
+-		__asm__ __volatile__(
+-		"	.set	mips3					\n"
+-		"1:"	__LL	"%1, %2		# local_sub_if_positive\n"
+-		"	dsubu	%0, %1, %3				\n"
+-		"	bltz	%0, 1f					\n"
+-			__SC	"%0, %2					\n"
+-		"	.set	noreorder				\n"
+-		"	beqzl	%0, 1b					\n"
+-		"	 dsubu	%0, %1, %3				\n"
+-		"	.set	reorder					\n"
+-		"1:							\n"
+-		"	.set	mips0					\n"
+-		: "=&r" (result), "=&r" (temp), "=m" (l->a.counter)
+-		: "Ir" (i), "m" (l->a.counter)
+-		: "memory");
+-	} else if (cpu_has_llsc) {
+-		unsigned long temp;
+-
+-		__asm__ __volatile__(
+-		"	.set	mips3					\n"
+-		"1:"	__LL	"%1, %2		# local_sub_if_positive\n"
+-		"	dsubu	%0, %1, %3				\n"
+-		"	bltz	%0, 1f					\n"
+-			__SC	"%0, %2					\n"
+-		"	.set	noreorder				\n"
+-		"	beqz	%0, 1b					\n"
+-		"	 dsubu	%0, %1, %3				\n"
+-		"	.set	reorder					\n"
+-		"1:							\n"
+-		"	.set	mips0					\n"
+-		: "=&r" (result), "=&r" (temp), "=m" (l->a.counter)
+-		: "Ir" (i), "m" (l->a.counter)
+-		: "memory");
+-	} else {
+-		unsigned long flags;
+-
+-		local_irq_save(flags);
+-		result = l->a.counter;
+-		result -= i;
+-		if (result >= 0)
+-			l->a.counter = result;
+-		local_irq_restore(flags);
+-	}
+-
+-	return result;
+-}
+-
+ #define local_cmpxchg(l, o, n) \
+ 	((long)cmpxchg_local(&((l)->a.counter), (o), (n)))
+ #define local_xchg(l, n) (xchg_local(&((l)->a.counter),(n)))
+@@ -234,12 +172,6 @@
+ #define local_dec_and_test(l) (local_sub_return(1, (l)) == 0)
+ 
+ /*
+- * local_dec_if_positive - decrement by 1 if old value positive
+- * @l: pointer of type local_t
+- */
+-#define local_dec_if_positive(l)	local_sub_if_positive(1, l)
+-
+-/*
+  * local_add_negative - add and test if negative
+  * @l: pointer of type local_t
+  * @i: integer value to add
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/mach-au1x00/au1000.h linux_kernel_2.6.22.19-19/include/asm-mips/mach-au1x00/au1000.h
+--- linux-2.6.22.19/include/asm-mips/mach-au1x00/au1000.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/mach-au1x00/au1000.h	2008-02-26 10:54:25.000000000 +0100
+@@ -1672,10 +1672,11 @@
+ #define Au1500_PCI_MEM_START      0x440000000ULL
+ #define Au1500_PCI_MEM_END        0x44FFFFFFFULL
+ 
+-#define PCI_IO_START    (Au1500_PCI_IO_START + 0x1000)
+-#define PCI_IO_END      (Au1500_PCI_IO_END)
+-#define PCI_MEM_START   (Au1500_PCI_MEM_START)
+-#define PCI_MEM_END     (Au1500_PCI_MEM_END)
++#define PCI_IO_START	0x00001000
++#define PCI_IO_END	0x000FFFFF
++#define PCI_MEM_START	0x40000000
++#define PCI_MEM_END	0x4FFFFFFF
++
+ #define PCI_FIRST_DEVFN (0<<3)
+ #define PCI_LAST_DEVFN  (19<<3)
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/mach-cobalt/cobalt.h linux_kernel_2.6.22.19-19/include/asm-mips/mach-cobalt/cobalt.h
+--- linux-2.6.22.19/include/asm-mips/mach-cobalt/cobalt.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/mach-cobalt/cobalt.h	2008-02-26 10:54:25.000000000 +0100
+@@ -30,7 +30,6 @@
+ #define COBALT_CPU_IRQ		MIPS_CPU_IRQ_BASE
+ 
+ #define COBALT_GALILEO_IRQ	(COBALT_CPU_IRQ + 2)
+-#define COBALT_SCC_IRQ          (COBALT_CPU_IRQ + 3)	/* pre-production has 85C30 */
+ #define COBALT_RAQ_SCSI_IRQ	(COBALT_CPU_IRQ + 3)
+ #define COBALT_ETH0_IRQ		(COBALT_CPU_IRQ + 3)
+ #define COBALT_QUBE1_ETH0_IRQ	(COBALT_CPU_IRQ + 4)
+@@ -71,10 +70,6 @@
+ 
+ extern int cobalt_board_id;
+ 
+-#define PCI_CFG_SET(devfn,where)					\
+-	GT_WRITE(GT_PCI0_CFGADDR_OFS, (0x80000000 | (PCI_SLOT (devfn) << 11) |		\
+-		(PCI_FUNC (devfn) << 8) | (where)))
+-
+ #define COBALT_LED_PORT		(*(volatile unsigned char *) CKSEG1ADDR(0x1c000000))
+ # define COBALT_LED_BAR_LEFT	(1 << 0)	/* Qube */
+ # define COBALT_LED_BAR_RIGHT	(1 << 1)	/* Qube */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/mach-generic/ide.h linux_kernel_2.6.22.19-19/include/asm-mips/mach-generic/ide.h
+--- linux-2.6.22.19/include/asm-mips/mach-generic/ide.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/mach-generic/ide.h	2011-08-23 13:02:26.000000000 +0200
+@@ -33,13 +33,24 @@
+ {
+ #ifdef CONFIG_PCI
+ 	struct pci_dev *dev;
+-	if ((dev = pci_get_class(PCI_CLASS_BRIDGE_EISA << 8, NULL)) != NULL ||
+-	    (dev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL)) != NULL) {
++	/*
++	 * This can be called on the ide_setup() path, super-early in
++	 * boot.  But the down_read() will enable local interrupts,
++	 * which can cause some machines to crash.  So here we detect
++	 * and flag that situation and bail out early.
++	 */
++	if (no_pci_devices())
++		return 0;
++	dev = pci_get_class(PCI_CLASS_BRIDGE_EISA << 8, NULL);
++	if (dev)
++		goto found;
++	dev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
++	if (dev)
++		goto found;
++	return 0;
++found:
+ 		pci_dev_put(dev);
+-
+ 		return 1;
+-	}
+-	return 0;
+ #elif defined(CONFIG_EISA) || defined(CONFIG_ISA)
+ 	return 1;
+ #else
+@@ -49,48 +60,42 @@
+ 
+ static __inline__ int ide_default_irq(unsigned long base)
+ {
+-	if (ide_probe_legacy())
+ 		switch (base) {
+-		case 0x1f0:
+-			return 14;
+-		case 0x170:
+-			return 15;
+-		case 0x1e8:
+-			return 11;
+-		case 0x168:
+-			return 10;
+-		case 0x1e0:
+-			return 8;
+-		case 0x160:
+-			return 12;
++		case 0x1f0: return 14;
++		case 0x170: return 15;
++		case 0x1e8: return 11;
++		case 0x168: return 10;
++		case 0x1e0: return 8;
++		case 0x160: return 12;
+ 		default:
+ 			return 0;
+ 		}
+-	else
+-		return 0;
+ }
+ 
+ static __inline__ unsigned long ide_default_io_base(int index)
+ {
+-	if (ide_probe_legacy())
++	if (!ide_probe_legacy())
++		return 0;
++	/*
++	 *      If PCI is present then it is not safe to poke around
++	 *      the other legacy IDE ports. Only 0x1f0 and 0x170 are
++	 *      defined compatibility mode ports for PCI. A user can
++	 *      override this using ide= but we must default safe.
++	 */
++	if (no_pci_devices()) {
+ 		switch (index) {
+-		case 0:
+-			return 0x1f0;
+-		case 1:
+-			return 0x170;
+-		case 2:
+-			return 0x1e8;
+-		case 3:
+-			return 0x168;
+-		case 4:
+-			return 0x1e0;
+-		case 5:
+-			return 0x160;
++		case 2: return 0x1e8;
++		case 3: return 0x168;
++		case 4: return 0x1e0;
++		case 5: return 0x160;
++		}
++	}
++	switch (index) {
++	case 0: return 0x1f0;
++	case 1: return 0x170;
+ 		default:
+ 			return 0;
+ 		}
+-	else
+-		return 0;
+ }
+ 
+ #define IDE_ARCH_OBSOLETE_INIT
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/mach-ip27/dma-coherence.h linux_kernel_2.6.22.19-19/include/asm-mips/mach-ip27/dma-coherence.h
+--- linux-2.6.22.19/include/asm-mips/mach-ip27/dma-coherence.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/mach-ip27/dma-coherence.h	2008-02-26 10:54:25.000000000 +0100
+@@ -35,7 +35,7 @@
+ 
+ static unsigned long plat_dma_addr_to_phys(dma_addr_t dma_addr)
+ {
+-	return dma_addr & (0xffUL << 56);
++	return dma_addr & ~(0xffUL << 56);
+ }
+ 
+ static inline void plat_unmap_dma_mem(dma_addr_t dma_addr)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/mipsregs.h linux_kernel_2.6.22.19-19/include/asm-mips/mipsregs.h
+--- linux-2.6.22.19/include/asm-mips/mipsregs.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/mipsregs.h	2008-02-26 10:54:25.000000000 +0100
+@@ -7,7 +7,7 @@
+  * Copyright (C) 2000 Silicon Graphics, Inc.
+  * Modified for further R[236]000 support by Paul M. Antoine, 1996.
+  * Kevin D. Kissell, kevink@mips.com and Carsten Langgaard, carstenl@mips.com
+- * Copyright (C) 2000 MIPS Technologies, Inc.  All rights reserved.
++ * Copyright (C) 2000, 07 MIPS Technologies, Inc.
+  * Copyright (C) 2003, 2004  Maciej W. Rozycki
+  */
+ #ifndef _ASM_MIPSREGS_H
+@@ -533,6 +533,7 @@
+ #define MIPS_CONF3_VEIC		(_ULCAST_(1) <<  6)
+ #define MIPS_CONF3_LPA		(_ULCAST_(1) <<  7)
+ #define MIPS_CONF3_DSP		(_ULCAST_(1) << 10)
++#define MIPS_CONF3_ULRI		(_ULCAST_(1) << 13)
+ 
+ #define MIPS_CONF7_WII		(_ULCAST_(1) << 31)
+ 
+@@ -772,6 +773,9 @@
+ #define read_c0_context()	__read_ulong_c0_register($4, 0)
+ #define write_c0_context(val)	__write_ulong_c0_register($4, 0, val)
+ 
++#define read_c0_userlocal()	__read_ulong_c0_register($4, 2)
++#define write_c0_userlocal(val)	__write_ulong_c0_register($4, 2, val)
++
+ #define read_c0_pagemask()	__read_32bit_c0_register($5, 0)
+ #define write_c0_pagemask(val)	__write_32bit_c0_register($5, 0, val)
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/processor.h linux_kernel_2.6.22.19-19/include/asm-mips/processor.h
+--- linux-2.6.22.19/include/asm-mips/processor.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/processor.h	2008-02-26 10:54:25.000000000 +0100
+@@ -237,7 +237,7 @@
+ 
+ #define ARCH_HAS_PREFETCH
+ 
+-extern inline void prefetch(const void *addr)
++static inline void prefetch(const void *addr)
+ {
+ 	__asm__ __volatile__(
+ 	"	.set	mips4		\n"
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/serial.h linux_kernel_2.6.22.19-19/include/asm-mips/serial.h
+--- linux-2.6.22.19/include/asm-mips/serial.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/serial.h	2008-02-26 10:54:25.000000000 +0100
+@@ -174,4 +174,9 @@
+ 	MOMENCO_OCELOT_SERIAL_PORT_DEFNS		\
+ 	MOMENCO_OCELOT_3_SERIAL_PORT_DEFNS
+ 
++#ifdef CONFIG_SERIAL_8250_AU1X00
++#undef is_real_interrupt
++#define is_real_interrupt(irq)	(1)
++#endif
++
+ #endif /* _ASM_SERIAL_H */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/smp.h linux_kernel_2.6.22.19-19/include/asm-mips/smp.h
+--- linux-2.6.22.19/include/asm-mips/smp.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/smp.h	2008-02-26 10:54:25.000000000 +0100
+@@ -49,13 +49,6 @@
+ extern cpumask_t phys_cpu_present_map;
+ #define cpu_possible_map	phys_cpu_present_map
+ 
+-extern cpumask_t cpu_callout_map;
+-/* We don't mark CPUs online until __cpu_up(), so we need another measure */
+-static inline int num_booting_cpus(void)
+-{
+-	return cpus_weight(cpu_callout_map);
+-}
+-
+ /*
+  * These are defined by the board-specific code.
+  */
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/system.h linux_kernel_2.6.22.19-19/include/asm-mips/system.h
+--- linux-2.6.22.19/include/asm-mips/system.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/system.h	2008-02-26 10:54:25.000000000 +0100
+@@ -56,8 +56,6 @@
+ 		__save_dsp(prev);					\
+ 	next->thread.emulated_fp = 0;					\
+ 	(last) = resume(prev, next, task_thread_info(next));		\
+-	if (cpu_has_dsp)						\
+-		__restore_dsp(current);					\
+ } while(0)
+ 
+ #else
+@@ -66,10 +64,16 @@
+ 	if (cpu_has_dsp)						\
+ 		__save_dsp(prev);					\
+ 	(last) = resume(prev, next, task_thread_info(next));		\
++} while (0)
++#endif
++
++#define finish_arch_switch(prev)					\
++do {									\
+ 	if (cpu_has_dsp)						\
+ 		__restore_dsp(current);					\
+-} while(0)
+-#endif
++	if (cpu_has_userlocal)						\
++		write_c0_userlocal(current_thread_info()->tp_value);	\
++} while (0)
+ 
+ /*
+  * On SMP systems, when the scheduler does migration-cost autodetection,
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/vr41xx/giu.h linux_kernel_2.6.22.19-19/include/asm-mips/vr41xx/giu.h
+--- linux-2.6.22.19/include/asm-mips/vr41xx/giu.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/vr41xx/giu.h	2008-02-26 10:54:25.000000000 +0100
+@@ -20,6 +20,15 @@
+ #ifndef __NEC_VR41XX_GIU_H
+ #define __NEC_VR41XX_GIU_H
+ 
++/*
++ * NEC VR4100 series GIU platform device IDs.
++ */
++enum {
++	GPIO_50PINS_PULLUPDOWN,
++	GPIO_36PINS,
++	GPIO_48PINS_EDGE_SELECT,
++};
++
+ typedef enum {
+ 	IRQ_TRIGGER_LEVEL,
+ 	IRQ_TRIGGER_EDGE,
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/asm-mips/vr41xx/siu.h linux_kernel_2.6.22.19-19/include/asm-mips/vr41xx/siu.h
+--- linux-2.6.22.19/include/asm-mips/vr41xx/siu.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/asm-mips/vr41xx/siu.h	2008-02-26 10:54:25.000000000 +0100
+@@ -20,6 +20,8 @@
+ #ifndef __NEC_VR41XX_SIU_H
+ #define __NEC_VR41XX_SIU_H
+ 
++#define SIU_PORTS_MAX 2
++
+ typedef enum {
+ 	SIU_INTERFACE_RS232C,
+ 	SIU_INTERFACE_IRDA,
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/linux/pci.h linux_kernel_2.6.22.19-19/include/linux/pci.h
+--- linux-2.6.22.19/include/linux/pci.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/linux/pci.h	2008-02-26 10:54:25.000000000 +0100
+@@ -431,6 +431,8 @@
+  * code, or pci core code. */
+ extern struct list_head pci_root_buses;	/* list of all known PCI buses */
+ extern struct list_head pci_devices;	/* list of all devices */
++/* Some device drivers need know if pci is initiated */
++extern int no_pci_devices(void);
+ 
+ void pcibios_fixup_bus(struct pci_bus *);
+ int __must_check pcibios_enable_device(struct pci_dev *, int mask);
+@@ -717,6 +719,7 @@
+ { return NULL; }
+ 
+ #define pci_dev_present(ids)	(0)
++#define no_pci_devices()	(1)
+ #define pci_find_present(ids)	(NULL)
+ #define pci_dev_put(dev)	do { } while (0)
+ 
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/linux/pci_ids.h linux_kernel_2.6.22.19-19/include/linux/pci_ids.h
+--- linux-2.6.22.19/include/linux/pci_ids.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/linux/pci_ids.h	2008-02-26 10:54:25.000000000 +0100
+@@ -1642,6 +1642,9 @@
+ #define PCI_VENDOR_ID_SATSAGEM		0x1267
+ #define PCI_DEVICE_ID_SATSAGEM_NICCY	0x1016
+ 
++#define PCI_VENDOR_ID_SILICON_MOTION		0x126f
++#define PCI_DEVICE_ID_SM501_VOYAGER_GX_REV_AA	0x0501
++#define PCI_DEVICE_ID_SM501_VOYAGER_GX_REV_B	0x0510
+ 
+ #define PCI_VENDOR_ID_ENSONIQ		0x1274
+ #define PCI_DEVICE_ID_ENSONIQ_CT5880	0x5880
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/include/linux/serial.h linux_kernel_2.6.22.19-19/include/linux/serial.h
+--- linux-2.6.22.19/include/linux/serial.h	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/include/linux/serial.h	2008-02-26 10:54:25.000000000 +0100
+@@ -76,7 +76,8 @@
+ #define PORT_16654	11
+ #define PORT_16850	12
+ #define PORT_RSA	13	/* RSA-DV II/S card */
+-#define PORT_MAX	13
++#define PORT_SB1250	14
++#define PORT_MAX	14
+ 
+ #define SERIAL_IO_PORT	0
+ #define SERIAL_IO_HUB6	1
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/kernel/irq/chip.c linux_kernel_2.6.22.19-19/kernel/irq/chip.c
+--- linux-2.6.22.19/kernel/irq/chip.c	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/kernel/irq/chip.c	2008-02-26 10:54:25.000000000 +0100
+@@ -503,7 +503,6 @@
+ 	spin_unlock(&desc->lock);
+ }
+ 
+-#ifdef CONFIG_SMP
+ /**
+  *	handle_percpu_IRQ - Per CPU local irq handler
+  *	@irq:	the interrupt number
+@@ -529,8 +528,6 @@
+ 		desc->chip->eoi(irq);
+ }
+ 
+-#endif /* CONFIG_SMP */
+-
+ void
+ __set_irq_handler(unsigned int irq, irq_flow_handler_t handle, int is_chained,
+ 		  const char *name)
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/Makefile linux_kernel_2.6.22.19-19/Makefile
+--- linux-2.6.22.19/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/Makefile	2011-08-23 13:02:26.000000000 +0200
+@@ -158,10 +158,7 @@
+ # then ARCH is assigned, getting whatever value it gets normally, and 
+ # SUBARCH is subsequently ignored.
+ 
+-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
+-				  -e s/arm.*/arm/ -e s/sa110/arm/ \
+-				  -e s/s390x/s390/ -e s/parisc64/parisc/ \
+-				  -e s/ppc.*/powerpc/ -e s/mips.*/mips/ )
++SUBARCH := mips
+ 
+ # Cross compiling and selecting different set of gcc/bin-utils
+ # ---------------------------------------------------------------------------
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/sound/oss/Kconfig linux_kernel_2.6.22.19-19/sound/oss/Kconfig
+--- linux-2.6.22.19/sound/oss/Kconfig	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/sound/oss/Kconfig	2008-02-26 10:54:25.000000000 +0100
+@@ -80,6 +80,13 @@
+ 	select SND_AC97_CODEC
+ 	depends on SOUND_PRIME && (SOC_AU1550 || SOC_AU1200)
+ 
++config SOUND_AU1550_I2S
++	tristate "Au1550 I2S Sound"
++	depends on SOUND_PRIME && SOC_AU1550
++	# Weird I2S driver needs I2C driver to talk to the codec...
++	select I2C
++	select I2C_AU1550
++
+ config SOUND_TRIDENT
+ 	tristate "Trident 4DWave DX/NX, SiS 7018 or ALi 5451 PCI Audio Core"
+ 	depends on SOUND_PRIME && PCI
+diff -NaurbdB '--exclude=CVS' '--exclude=*.o' '--exclude=*.a' '--exclude=*.so' '--exclude=*.elf' '--exclude=System.map' '--exclude=Makefile.d' '--exclude=*log' '--exclude=*log2' '--exclude=*~' '--exclude=.*~' '--exclude=.#*' '--exclude=*.bak' '--exclude=*.orig' '--exclude=*.rej' '--exclude=core.[0-9]*' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=.depend' '--exclude=.*.o.flags' '--exclude=*.gz' '--exclude=vmlinux' '--exclude=vmlinux.bin' '--exclude=yamon-02.06-SIGMADESIGNS-01_el.bin' linux-2.6.22.19/sound/oss/Makefile linux_kernel_2.6.22.19-19/sound/oss/Makefile
+--- linux-2.6.22.19/sound/oss/Makefile	2008-02-26 00:59:40.000000000 +0100
++++ linux_kernel_2.6.22.19-19/sound/oss/Makefile	2008-02-26 10:54:25.000000000 +0100
+@@ -45,6 +45,7 @@
+ obj-$(CONFIG_SOUND_ES1371)	+= es1371.o ac97_codec.o
+ obj-$(CONFIG_SOUND_VRC5477)	+= nec_vrc5477.o ac97_codec.o
+ obj-$(CONFIG_SOUND_AU1550_AC97)	+= au1550_ac97.o ac97_codec.o
++obj-$(CONFIG_SOUND_AU1550_I2S)	+= au1550_i2s.o
+ obj-$(CONFIG_SOUND_FUSION)	+= cs46xx.o ac97_codec.o
+ obj-$(CONFIG_SOUND_TRIDENT)	+= trident.o ac97_codec.o
+ obj-$(CONFIG_SOUND_EMU10K1)	+= ac97_codec.o

@@ -54,8 +54,8 @@ endef
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   define Host/Configure/lzma
 	$(CP) \
-		$(HOST_BUILD_DIR)/arch/mips/include/asm/asm.h \
-		$(HOST_BUILD_DIR)/arch/mips/include/asm/regdef.h \
+		$(HOST_BUILD_DIR)/include/asm-mips/asm.h \
+		$(HOST_BUILD_DIR)/include/asm-mips/regdef.h \
 		$(BUILD_DIR_TOOLCHAIN)/linux-dev/include/asm/
   endef
 endif
